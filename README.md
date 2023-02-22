@@ -31,7 +31,7 @@
     DB_CONNECTION=mysql
     DB_HOST=db
     DB_PORT=3306
-    DB_DATABASE=laravel
+    DB_DATABASE=laravel10
     DB_USERNAME=dthanh
     DB_PASSWORD=DThanh1508
    ```
