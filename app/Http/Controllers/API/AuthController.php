@@ -34,4 +34,30 @@ class AuthController extends Controller
         ];
         return response($res, 201);
     }
+
+    public function login(Request $request)
+    {
+        $data = $request->validate([
+            'email' => 'required|string',
+            'password' => 'required|string'
+        ]);
+
+        $user = User::where('email', $data['email'])->first();
+
+        if (!$user || !Hash::check($data['password'], $user->password)) {
+            return response([
+                'msg' => 'Incorrect email or password'
+            ], 400);
+        }
+
+        $token = $user->createToken('apiToken')->plainTextToken;
+
+        $res = [
+            'user' => $user->name,
+            'token' => $token,
+            'message' => 'Logged successfully'
+        ];
+
+        return response($res, 200);
+    }
 }
