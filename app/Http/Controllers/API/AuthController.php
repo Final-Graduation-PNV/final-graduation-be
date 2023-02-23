@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -35,16 +36,13 @@ class AuthController extends Controller
         return response($res, 201);
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $data = $request->validate([
-            'email' => 'required|string',
-            'password' => 'required|string'
-        ]);
+        $validation  = $request->validated();
 
-        $user = User::where('email', $data['email'])->first();
+        $user = User::where('email', $validation['email'])->first();
 
-        if (!$user || !Hash::check($data['password'], $user->password)) {
+        if (!$user || !Hash::check($validation['password'], $user->password)) {
             return response([
                 'msg' => 'Incorrect email or password'
             ], 400);
