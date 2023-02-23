@@ -46,7 +46,7 @@ class AuthController extends Controller
 
         if (!$user || !Hash::check($data['password'], $user->password)) {
             return response([
-                'msg' => 'Incorrect email or password'
+                'message' => 'Incorrect email or password'
             ], 400);
         }
 
@@ -59,5 +59,13 @@ class AuthController extends Controller
         ];
 
         return response($res, 200);
+    }
+
+    public function logout(Request $request)
+    {
+        auth()->user()->tokens()->delete();
+        return [
+            'message' => 'user logged out'
+        ];
     }
 }
