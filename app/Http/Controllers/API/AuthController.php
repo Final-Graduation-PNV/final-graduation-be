@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -34,36 +33,5 @@ class AuthController extends Controller
             'token' => $token
         ];
         return response($res, 201);
-    }
-
-    public function login(LoginRequest $request)
-    {
-        $validation  = $request->validated();
-
-        $user = User::where('email', $validation['email'])->first();
-
-        if (!$user || !Hash::check($validation['password'], $user->password)) {
-            return response([
-                'msg' => 'Incorrect email or password'
-            ], 400);
-        }
-
-        $token = $user->createToken('apiToken')->plainTextToken;
-
-        $res = [
-            'user' => $user->name,
-            'token' => $token,
-            'message' => 'Logged successfully'
-        ];
-
-        return response($res, 200);
-    }
-
-    public function logout(Request $request)
-    {
-        auth()->user()->tokens()->delete();
-        return [
-            'message' => 'user logged out'
-        ];
     }
 }
