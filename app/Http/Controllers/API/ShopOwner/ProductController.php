@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\API\ShopOwner;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -29,26 +31,18 @@ class ProductController extends Controller
         ], 200);
     }
 
-    public function create(Request $request)
+    public function create(CreateProductRequest $request)
     {
-        $data = $request->validate([
-            'name' => 'required|string',
-            'price' => 'required',
-            'description' => 'required',
-            'image' => 'required',
-            'quantity' => 'required|integer|min:1',
-            'category_id' => 'required|integer',
-            'shop_id' => 'required|integer',
-        ]);
+        $validation = $request->validated();
 
         $product = Product::create([
-            'name' => $data['name'],
-            'price' => $data['price'],
-            'description' => $data['description'],
-            'image' => $data['image'],
-            'quantity' => $data['quantity'],
-            'category_id' => $data['category_id'],
-            'shop_id' => $data['shop_id'],
+            'name' => $validation['name'],
+            'price' => $validation['price'],
+            'description' => $validation['description'],
+            'image' => $validation['image'],
+            'quantity' => $validation['quantity'],
+            'category_id' => $validation['category_id'],
+            'shop_id' => $validation['shop_id'],
         ]);
 
         $res = [
@@ -58,15 +52,9 @@ class ProductController extends Controller
         return response()->json($res, 201);
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateProductRequest $request, $id)
     {
-        $request->validate([
-            'name' => 'required|string',
-            'price' => 'required',
-            'description' => 'required',
-            'image' => 'required',
-            'quantity' => 'required|integer|min:1',
-        ]);
+        $validation = $request->validated();
 
         $product = Product::find($id);
         if (!$product) {
@@ -75,18 +63,19 @@ class ProductController extends Controller
             ], 404);
         }
 
-        if ($request->shop_id) {
+        if ($validation->shop_id) {
             return response()->json([
                 'message' => 'You can not update the shop owner!'
             ], 400);
         }
 
-        if ($request->category_id) {
+        if ($validation->category_id) {
             return response()->json([
                 'message' => 'You can not update the category!'
             ], 400);
         }
-        $product->update($request->all());
+
+        $product->update($validation->all());
 
         return response()->json([
             'product' => $product
