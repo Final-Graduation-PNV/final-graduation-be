@@ -10,11 +10,13 @@ use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
-    public function beShopOwner(BeShopOwnerRequest $request)
+    public function beShopOwner(Request $request)
     {
-        $validation = $request->validated();
+        $request->validate([
+            'user_id' => 'required|integer|min:1'
+        ]);
 
-        $user = User::find($validation->user_id);
+        $user = User::find($request->user_id);
         if (!$user) {
             return response()->json([
                 'message' => "User does not exist!"
