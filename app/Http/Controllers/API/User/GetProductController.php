@@ -8,6 +8,24 @@ use Illuminate\Http\Request;
 
 class GetProductController extends Controller
 {
+    public function index()
+    {
+        return Product::all();
+    }
+
+    public function getById($id)
+    {
+        $product = Product::find($id);
+
+        $product->category->name;
+
+        $product->shop->name;
+
+        return response()->json([
+            'product' => $product
+        ], 200);
+    }
+
     public function search(Request $request)
     {
         $key = $request->query('key');

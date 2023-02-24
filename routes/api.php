@@ -42,6 +42,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::group(['middleware' => ['role:user']], function () {
         Route::get('/user/products/search', [GetProductController::class, 'search']);
         Route::post('/user/be-shop', [UserController::class, 'beShopOwner']);
+        Route::get('/user/products', [GetProductController::class, 'index']);
+        Route::get('/user/products/{id}', [GetProductController::class, 'getById']);
     });
 
     /**
@@ -62,11 +64,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
      *
      */
     Route::group(['middleware' => ['role:admin']], function () {
-        Route::get('/categories', [CategoryController::class, 'index']);
-        Route::get('/categories/{id}', [CategoryController::class, 'getById']);
-        Route::post('/categories', [CategoryController::class, 'create']);
-        Route::patch('/categories/{id}', [CategoryController::class, 'update']);
-        Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
+        Route::get('/admin/categories', [CategoryController::class, 'index']);
+        Route::get('/admin/categories/{id}', [CategoryController::class, 'getById']);
+        Route::post('/admin/categories', [CategoryController::class, 'create']);
+        Route::patch('/admin/categories/{id}', [CategoryController::class, 'update']);
+        Route::delete('/admin/categories/{id}', [CategoryController::class, 'destroy']);
     });
 
     /**
