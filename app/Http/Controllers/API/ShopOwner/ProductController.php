@@ -54,7 +54,13 @@ class ProductController extends Controller
 
     public function update(UpdateProductRequest $request, $id)
     {
-        $validation = $request->validated();
+        $request->validate([
+            'name' => 'required|string',
+            'price' => 'required',
+            'description' => 'required',
+            'image' => 'required',
+            'quantity' => 'required|integer|min:1',
+        ]);
 
         $product = Product::find($id);
         if (!$product) {
@@ -63,19 +69,19 @@ class ProductController extends Controller
             ], 404);
         }
 
-        if ($validation->shop_id) {
+        if ($request->shop_id) {
             return response()->json([
                 'message' => 'You can not update the shop owner!'
             ], 400);
         }
 
-        if ($validation->category_id) {
+        if ($request->category_id) {
             return response()->json([
                 'message' => 'You can not update the category!'
             ], 400);
         }
 
-        $product->update($validation->all());
+        $product->update($request->all());
 
         return response()->json([
             'product' => $product
