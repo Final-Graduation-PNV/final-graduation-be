@@ -89,4 +89,8 @@ class User extends Authenticatable
         }
         return false;
     }
+
+    public function products(){
+        return $this->hasMany(Product::class,'shop_id','id');
+    }
 }
