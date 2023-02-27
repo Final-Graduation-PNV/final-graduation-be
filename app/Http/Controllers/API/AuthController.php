@@ -64,7 +64,7 @@ class AuthController extends Controller
                 'id' => $user->id,
                 'token' => $token,
                 'message' => 'Logged successfully',
-                'shop owner' => true
+                'shopOwner' => true
             ];
         }
         else
@@ -74,7 +74,7 @@ class AuthController extends Controller
                 'id' => $user->id,
                 'token' => $token,
                 'message' => 'Logged successfully',
-                'shop owner' => false
+                'shopOwner' => false
             ];
         }
 
