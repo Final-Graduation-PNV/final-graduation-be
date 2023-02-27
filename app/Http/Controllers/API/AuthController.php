@@ -50,14 +50,33 @@ class AuthController extends Controller
             ], 400);
         }
 
+        $role_user = DB::table('role_user')
+            ->where('user_id', $user->id)
+            ->where('role_id', 2)
+            ->first();
+
         $token = $user->createToken('apiToken')->plainTextToken;
 
-        $res = [
-            'username' => $user->name,
-            'id' => $user->id,
-            'token' => $token,
-            'message' => 'Logged successfully'
-        ];
+        if ($role_user)
+        {
+            $res = [
+                'username' => $user->name,
+                'id' => $user->id,
+                'token' => $token,
+                'message' => 'Logged successfully',
+                'shop owner' => true
+            ];
+        }
+        else
+        {
+            $res = [
+                'username' => $user->name,
+                'id' => $user->id,
+                'token' => $token,
+                'message' => 'Logged successfully',
+                'shop owner' => false
+            ];
+        }
 
         return response($res, 200);
     }
