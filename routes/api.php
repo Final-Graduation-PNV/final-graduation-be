@@ -49,12 +49,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
          * CRUD cart.
          *
          */
-        Route::post('carts', [CartController::class, 'add']);
-        Route::get('carts', [CartController::class, 'getCartByUserId']);
-        Route::patch('carts/{id}', [CartController::class, 'updateQuantity']);
-        Route::delete('carts/{id}', [CartController::class, 'deleteCart']);
-        Route::delete('carts', [CartController::class, 'deleteMany']);
-        Route::delete('clear-carts', [CartController::class, 'clear']);
+        Route::post('/user/product/carts', [CartController::class, 'add']);
+        Route::get('/user/carts', [CartController::class, 'getCartByUserId']);
+        Route::patch('/user/carts/{id}', [CartController::class, 'updateQuantity']);
+        Route::delete('/user/carts/{id}', [CartController::class, 'deleteCart']);
+        Route::delete('/user/carts', [CartController::class, 'deleteMany']);
+        Route::delete('/user/clear-carts', [CartController::class, 'clear']);
     });
 
     /**
