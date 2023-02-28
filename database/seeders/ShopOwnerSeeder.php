@@ -24,7 +24,12 @@ class ShopOwnerSeeder extends Seeder
         ]);
 
         DB::table('role_user')->insert([
-            'role_id' => 3 && 2,
+            'role_id' => 3,
+            'user_id' => $user->id
+        ]);
+
+        DB::table('role_user')->insert([
+            'role_id' => 2,
             'user_id' => $user->id
         ]);
     }
