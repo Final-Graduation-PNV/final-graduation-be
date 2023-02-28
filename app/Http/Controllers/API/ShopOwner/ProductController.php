@@ -6,13 +6,27 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return Product::all();
+        $request->validate([
+            'shop_id' => 'required|integer|min:1'
+        ]);
+
+        $shop = User::find($request->shop_id);
+        if (!$shop) {
+            return response()->json([
+                'message' => 'Shop does not exist!'
+            ], 400);
+        }
+
+        return Product::join('categories', 'categories.id', '=', 'products.category_id')
+            ->where('products.shop_id', $shop->id)
+            ->get(['categories.name as category_name', 'products.*']);
     }
 
     public function getById($id)
@@ -95,6 +109,6 @@ class ProductController extends Controller
 
     public function search($name)
     {
-        return  Product::where('name', 'like', '%' . $name . '%')->get();
+        return Product::where('name', 'like', '%' . $name . '%')->get();
     }
 }
