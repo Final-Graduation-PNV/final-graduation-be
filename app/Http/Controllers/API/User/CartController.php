@@ -144,5 +144,72 @@ class CartController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
+     */
+    function deleteCart(Request $request, $id): JsonResponse
+    {
+        $cart = Cart::find($id);
+        if (!$cart) {
+            return response()->json([
+                'message' => 'Cart was not found!',
+            ], 404);
+        }
+        if (!($cart->user_id == $request->user()->id)) {
+            return response()->json([
+                'message' => 'Permission issue!',
+            ], 403);
+        }
+        try {
+            $cart->delete();
+            return response()->json([
+                'message' => 'Cart was deleted successfully!',
+                'cart' => $cart
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Something went wrong!'
+            ], 500);
+        }
+
+    }
+
+    function deleteMany(Request $request): JsonResponse
+    {
+        try {
+            $carts = Cart::where('user_id', $request->user()->id)->first();
+            if (!$carts) {
+                return response()->json([
+                    'message' => 'Permission issue!',
+                ], 403);
+            }
+            $carts = Cart::whereIn('id', $request->ids)->delete();
+            return response()->json([
+                'message' => 'Carts were deleted successfully!',
+                'carts' => $carts
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Something went wrong!'
+            ], 500);
+        }
+    }
+
+    function clear(Request $request): JsonResponse
+    {
+        try {
+            Cart::where('user_id', $request->user()->id)->delete();
+            return response()->json([
+                'message' => 'Carts were deleted successfully!',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Something went wrong!'
+            ], 500);
+        }
+    }
 }
 
