@@ -20,11 +20,8 @@ class Cart extends Model
         'quantity',
     ];
 
-    /**
-     * @return HasOne
-     */
-    public function product(): HasOne
+    public function product(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
-        return $this->hasOne(Product::class, 'product_id', 'id');
+        return $this->hasOne(Product::class, 'id', 'product_id');
     }
 }

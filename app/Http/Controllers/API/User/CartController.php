@@ -74,4 +74,28 @@ class CartController extends Controller
                 ], 201);
         }
     }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    function getCartByUserId(Request $request): JsonResponse
+    {
+        $user_id = $request->user()->id;
+        $products = [];
+        try {
+            $carts = Cart::where('user_id', $user_id)->get();
+            foreach ($carts as $cart) {
+                $products[] = $cart->product;
+            }
+            return response()->json([
+                'carts' => $products
+            ], 200);
+        } catch (Exception $exception) {
+            return response()->json([
+                'message' => 'Something went wrong!'
+            ], 500);
+        }
+
+    }
 }
