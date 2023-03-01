@@ -151,6 +151,6 @@ class ProductController extends Controller
         return Product::join('categories', 'categories.id', '=', 'products.category_id')
             ->where('products.name', 'like', '%' . $name . '%')
             ->where('products.shop_id', $id)
-            ->get(['categories.name as category_name', 'products.*']);
+            ->get(['products.*']);
     }
 }
