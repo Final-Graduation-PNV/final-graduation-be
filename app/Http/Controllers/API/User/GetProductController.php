@@ -17,23 +17,36 @@ class GetProductController extends Controller
     {
         $product = Product::find($id);
 
-        $product->category->name;
-
-        $product->shop->name;
+        $detail = Product::join('users', 'users.id', '=', 'products.shop_id')
+            ->join('categories', 'categories.id', '=', 'products.category_id')
+            ->where('products.id', $product->id)
+            ->get(['users.name as shop_name', 'users.city as address_shop', 'users.id as shop_id', 'products.*', 'categories.name as category_name']);
 
         return response()->json([
-            'product' => $product
+            'product' => $detail
         ], 200);
     }
 
-    public function search(Request $request)
+    public function searchKey(Request $request)
     {
         $key = $request->query('key');
+        return Product::join('users', 'users.id', '=', 'products.shop_id')
+            ->join('categories', 'categories.id', '=', 'products.category_id')
+            ->where('products.name', 'like', '%' . $key . '%')
+            ->orWhere('users.city', 'like', '%' . $key . '%')
+            ->orWhere('categories.name', 'like', '%' . $key . '%')
+            ->orWhere('products.description', 'like', '%' . $key . '%')
+            ->get(['users.name as shop_name', 'users.city as address_shop', 'users.id as shop_id', 'products.*']);
+    }
+
+    public function searchCityCate(Request $request)
+    {
+        $cate = $request->query('category');
         $city = $request->query('city');
         return Product::join('users', 'users.id', '=', 'products.shop_id')
-            ->where('users.city', $city)
-            ->where('products.name', 'like', '%' . $key . '%')
-            ->orWhere('products.description', 'like', '%' . $key . '%')
-            ->get(['users.name as shop_name', 'users.id as shop_id', 'products.*']);
+            ->join('categories', 'categories.id', '=', 'products.category_id')
+            ->where('categories.name', 'like', '%' . $cate . '%')
+            ->where('users.city', 'like', '%' . $city . '%')
+            ->get(['products.*']);
     }
 }
