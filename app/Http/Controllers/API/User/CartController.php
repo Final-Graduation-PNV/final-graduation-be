@@ -37,8 +37,16 @@ class CartController extends Controller
             ->first();
 
         if ($addedCart) {
+            if ($product->quantity < ($data['quantity'] + $product->quantity)) {
+                return response()->json([
+                    'message' => 'Your cart! The quantity must be less or equal than product quantity',
+                ], 400);
+            }
+
             $addedCart->quantity += $data['quantity'];
+
             $addedCart->save();
+
             return response()->json([
                 'message' => 'Your shopping cart has been updated!',
                 'cart' => $addedCart
