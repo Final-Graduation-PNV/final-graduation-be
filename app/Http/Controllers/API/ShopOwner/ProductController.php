@@ -13,41 +13,63 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        $request->validate([
-            'shop_id' => 'required|integer|min:1'
-        ]);
+        $id = $request->user()->id;
 
-        $shop = User::find($request->shop_id);
-        if (!$shop) {
+        if (!$id) {
             return response()->json([
-                'message' => 'Shop does not exist!'
-            ], 400);
+                'message' => 'Does not your account!'
+            ], 404);
         }
 
         return Product::join('categories', 'categories.id', '=', 'products.category_id')
-            ->where('products.shop_id', $shop->id)
+            ->where('products.shop_id', $id)
             ->get(['categories.name as category_name', 'products.*']);
     }
 
-    public function getById($id)
+    public function getById(Request $request, $id)
     {
         $product = Product::find($id);
+
         if (!$product) {
             return response()->json([
                 'message' => 'Product was not found!'
             ], 404);
         }
 
-        $product->category;
+        $idd = $request->user()->id;
 
-        return response()->json([
-            'product' => $product
-        ], 200);
+        if (!$idd) {
+            return response()->json([
+                'message' => 'Does not your account!'
+            ], 404);
+        }
+
+        return Product::join('categories', 'categories.id', '=', 'products.category_id')
+            ->join('users', 'users.id', '=', 'products.shop_id')
+            ->where('products.id', $id)
+            ->where('products.shop_id', $idd)
+            ->get(['users.name as shop_name', 'users.city as shop_city', 'categories.name as category_name', 'products.*']);
     }
 
     public function create(CreateProductRequest $request)
     {
         $validation = $request->validated();
+
+        $shop = User::find($request->shop_id);
+
+        if (!$shop) {
+            return response()->json([
+                'message' => 'Shop does not exist!'
+            ], 400);
+        }
+
+        $id = $request->user()->id === $shop->id;
+
+        if (!$id) {
+            return response()->json([
+                'message' => 'Does not your account!'
+            ], 404);
+        }
 
         $product = Product::create([
             'name' => $validation['name'],
@@ -59,10 +81,15 @@ class ProductController extends Controller
             'shop_id' => $validation['shop_id'],
         ]);
 
+        $cate = Product::join('categories', 'categories.id', '=', 'products.category_id')
+            ->where('products.id', $product->id)
+            ->get(['products.*', 'categories.name as category_name']);
+
         $res = [
-            'product' => $product,
+            'product' => $cate,
             'message' => 'Product was created successfully!'
         ];
+
         return response()->json($res, 201);
     }
 
@@ -74,6 +101,7 @@ class ProductController extends Controller
             'description' => 'required',
             'image' => 'required',
             'quantity' => 'required|integer|min:1',
+            'category_id' => 'required|integer',
         ]);
 
         $product = Product::find($id);
@@ -83,15 +111,17 @@ class ProductController extends Controller
             ], 404);
         }
 
+        $id = $request->user()->id;
+
+        if (!$id) {
+            return response()->json([
+                'message' => 'Does not your account!'
+            ], 404);
+        }
+
         if ($request->shop_id) {
             return response()->json([
                 'message' => 'You can not update the shop owner!'
-            ], 400);
-        }
-
-        if ($request->category_id) {
-            return response()->json([
-                'message' => 'You can not update the category!'
             ], 400);
         }
 
@@ -107,8 +137,20 @@ class ProductController extends Controller
         return Product::destroy($id);
     }
 
-    public function search($name)
+    public function search(Request $request)
     {
-        return Product::where('name', 'like', '%' . $name . '%')->get();
+        $id = $request->user()->id;
+
+        if (!$id) {
+            return response()->json([
+                'message' => 'Does not your account!'
+            ], 404);
+        }
+
+        $name = $request->query('name');
+        return Product::join('categories', 'categories.id', '=', 'products.category_id')
+            ->where('products.name', 'like', '%' . $name . '%')
+            ->where('products.shop_id', $id)
+            ->get(['categories.name as category_name', 'products.*']);
     }
 }
