@@ -106,7 +106,7 @@ class CartController extends Controller
     function updateQuantity(Request $request, $id): JsonResponse
     {
         $data = $request->validate([
-            'quantity' => 'required|integer|min:1'
+            'quantity' => 'required|integer|min:-1'
         ]);
 
         $cart = Cart::find($id);
@@ -121,6 +121,12 @@ class CartController extends Controller
             return response()->json([
                 'message' => 'Permission issue!',
             ], 403);
+        }
+
+        if (($cart->quantity)<=1){
+            return response()->json([
+                'message' => 'The quantity must be bigger product quantity!',
+            ], 400);
         }
 
         $product = Product::find($cart->product_id);
