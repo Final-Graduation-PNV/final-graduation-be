@@ -41,7 +41,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
      *
      */
     Route::group(['middleware' => ['role:user']], function () {
-        Route::get('/user/products/search', [GetProductController::class, 'search']);   // Search products by product name, product description and user city
+        Route::get('/user/products/search/key', [GetProductController::class, 'searchKey']);   // Search products by product name, product description, category name and user city
+        Route::get('/user/products/search/city-cate', [GetProductController::class, 'searchCityCate']);   // Search products by category name and user city
         Route::post('/user/be-shop', [UserController::class, 'beShopOwner']);           // Register as a shop owner
         Route::get('/user/products', [GetProductController::class, 'index']);           // Get all products
         Route::get('/user/products/{id}', [GetProductController::class, 'getById']);    // Get detail products
