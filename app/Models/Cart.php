@@ -14,17 +14,17 @@ use Illuminate\Database\Eloquent\Model;
 class Cart extends Model
 {
     use HasFactory;
+
+    protected $table = 'carts';
+
     protected $fillable = [
         'user_id',
         'product_id',
         'quantity',
     ];
 
-    /**
-     * @return HasOne
-     */
-    public function product(): HasOne
+    public function product()
     {
-        return $this->hasOne(Product::class, 'product_id', 'id');
+        return $this->hasOne(Product::class, 'id', 'product_id');
     }
 }
