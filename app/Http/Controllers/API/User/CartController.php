@@ -37,7 +37,7 @@ class CartController extends Controller
             ->first();
 
         if ($addedCart) {
-            if ($product->quantity < ($data['quantity'] + $product->quantity)) {
+            if ($product->quantity < ($data['quantity'] + $addedCart->quantity)) {
                 return response()->json([
                     'message' => 'Your cart! The quantity must be less or equal than product quantity',
                 ], 400);
@@ -98,4 +98,51 @@ class CartController extends Controller
         }
 
     }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
+     */
+    function updateQuantity(Request $request, $id): JsonResponse
+    {
+        $data = $request->validate([
+            'quantity' => 'required|integer|min:1'
+        ]);
+
+        $cart = Cart::find($id);
+
+        if (!$cart) {
+            return response()->json([
+                'message' => 'Cart was not found!',
+            ], 404);
+        }
+
+        if (!($cart->user_id == $request->user()->id)) {
+            return response()->json([
+                'message' => 'Permission issue!',
+            ], 403);
+        }
+
+        $product = Product::find($cart->product_id);
+
+        if ($product->quantity < ($data['quantity'] + $cart->quantity)) {
+            return response()->json([
+                'message' => 'Your cart! The quantity must be less or equal than product quantity',
+            ], 400);
+        }
+        try {
+            $cart->quantity += $data['quantity'];
+            $cart->save();
+            return response()->json([
+                'message' => 'Cart was updated successfully!',
+                'cart' => $cart
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Something went wrong!'
+            ], 500);
+        }
+    }
 }
+
