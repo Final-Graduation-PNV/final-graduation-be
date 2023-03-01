@@ -82,14 +82,13 @@ class CartController extends Controller
     function getCartByUserId(Request $request): JsonResponse
     {
         $user_id = $request->user()->id;
-        $products = [];
         try {
-            $carts = Cart::where('user_id', $user_id)->get();
-            foreach ($carts as $cart) {
-                $products[] = $cart->product;
-            }
+            $carts = Cart::join('products', 'products.id', '=', 'carts.product_id')
+                ->where('carts.user_id', $user_id)
+                ->get(['carts.id as cart_id', 'products.name', 'products.image', 'products.price', 'products.description', 'carts.quantity as cart_quantity']);
+
             return response()->json([
-                'carts' => $products
+                'carts' => $carts
             ], 200);
         } catch (Exception $exception) {
             return response()->json([
