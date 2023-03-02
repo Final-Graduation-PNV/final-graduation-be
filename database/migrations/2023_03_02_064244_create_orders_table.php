@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('carts', function (Blueprint $table) {
+        Schema::create('orders', function (Blueprint $table) {
             $table->increments('id');
             $table->enum('status',['1','2','3'])->default('1');
             $table->integer('quantity')->default(1);
-            $table->string('address')->nullable();
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
+            $table->string('address')->nullable();
             $table->unsignedInteger('user_id');
             $table->foreign('user_id')
                 ->references('id')
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('carts');
+        Schema::dropIfExists('orders');
     }
 };
