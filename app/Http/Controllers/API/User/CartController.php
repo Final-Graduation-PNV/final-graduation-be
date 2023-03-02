@@ -36,8 +36,11 @@ class CartController extends Controller
             ->where('product_id', $data['product_id'])
             ->first();
 
+        $pro = $product->quantity;
+
         if ($addedCart) {
-            if ($product->quantity < ($data['quantity'] + $addedCart->quantity)) {
+            $cart = $data['quantity'] + $addedCart->quantity;
+            if ($pro < $cart) {
                 return response()->json([
                     'message' => 'Your cart! The quantity must be less or equal than product quantity',
                 ], 400);
@@ -106,7 +109,7 @@ class CartController extends Controller
     function updateQuantity(Request $request, $id): JsonResponse
     {
         $data = $request->validate([
-            'quantity' => 'required|integer|min:-1'
+            'quantity' => 'required|integer|min:1'
         ]);
 
         $cart = Cart::find($id);
@@ -123,12 +126,6 @@ class CartController extends Controller
             ], 403);
         }
 
-        if (($cart->quantity)<=1){
-            return response()->json([
-                'message' => 'The quantity must be bigger product quantity!',
-            ], 400);
-        }
-
         $product = Product::find($cart->product_id);
 
         if ($product->quantity < ($data['quantity'] + $cart->quantity)) {
@@ -137,7 +134,7 @@ class CartController extends Controller
             ], 400);
         }
         try {
-            $cart->quantity += $data['quantity'];
+            $cart->quantity = $data['quantity'];
             $cart->save();
             return response()->json([
                 'message' => 'Cart was updated successfully!',
