@@ -91,14 +91,13 @@ class CartController extends Controller
                 ->get(['carts.id as cart_id', 'products.name', 'products.image', 'products.price', 'products.description', 'carts.quantity as cart_quantity']);
 
             return response()->json([
-                'carts' => $carts
+                'cart' => $carts
             ], 200);
         } catch (Exception $exception) {
             return response()->json([
                 'message' => 'Something went wrong!'
             ], 500);
         }
-
     }
 
     /**
