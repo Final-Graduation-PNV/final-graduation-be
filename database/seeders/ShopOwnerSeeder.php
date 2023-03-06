@@ -19,6 +19,7 @@ class ShopOwnerSeeder extends Seeder
             'name' => 'shop',
             'email' => 'shop@gmail.com',
             'password' => Hash::make('@DThanh1508'),
+            'email_verified' => true,
             'city' => 'Kon Tum',
             'address' => 'Dak Pung - Dak Ro Nga - Dak To - Kon Tum'
         ]);
