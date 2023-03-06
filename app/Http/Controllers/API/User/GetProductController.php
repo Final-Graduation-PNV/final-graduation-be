@@ -10,7 +10,11 @@ class GetProductController extends Controller
 {
     public function index()
     {
-        return Product::all();
+        $products = Product::all();
+
+        return response()->json([
+            'products' => $products
+        ], 200);
     }
 
     public function getById($id)
@@ -30,23 +34,38 @@ class GetProductController extends Controller
     public function searchKey(Request $request)
     {
         $key = $request->query('key');
-        return Product::join('users', 'users.id', '=', 'products.shop_id')
+        $products = Product::join('users', 'users.id', '=', 'products.shop_id')
             ->join('categories', 'categories.id', '=', 'products.category_id')
             ->where('products.name', 'like', '%' . $key . '%')
             ->orWhere('users.city', 'like', '%' . $key . '%')
             ->orWhere('categories.name', 'like', '%' . $key . '%')
             ->orWhere('products.description', 'like', '%' . $key . '%')
-            ->get(['users.name as shop_name', 'users.city as address_shop', 'users.id as shop_id', 'products.*']);
+            ->get([
+                'users.name as shop_name',
+                'users.city as address_shop',
+                'users.id as shop_id',
+                'products.*'
+            ]);
+
+        return response()->json([
+            'products' => $products,
+            'message' => 'Search results'
+        ], 202);
     }
 
     public function searchCityCate(Request $request)
     {
         $cate = $request->query('category');
         $city = $request->query('city');
-        return Product::join('users', 'users.id', '=', 'products.shop_id')
+        $products = Product::join('users', 'users.id', '=', 'products.shop_id')
             ->join('categories', 'categories.id', '=', 'products.category_id')
             ->where('categories.name', 'like', '%' . $cate . '%')
             ->where('users.city', 'like', '%' . $city . '%')
             ->get(['products.*']);
+
+        return response()->json([
+            'products' => $products,
+            'message' => 'Search results'
+        ], 202);
     }
 }

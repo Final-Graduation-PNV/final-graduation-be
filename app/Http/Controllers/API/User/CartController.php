@@ -71,8 +71,9 @@ class CartController extends Controller
                 $cart->user_id = $request->user()->id; // get user_id from logged in user
                 $cart->quantity = $data['quantity'];
                 $cart->save();
+
                 return response()->json([
-                    'message' => 'Add cart successfully!',
+                    'message' => 'Add to cart successfully!',
                     'cart' => $cart
                 ], 201);
         }
@@ -88,7 +89,13 @@ class CartController extends Controller
         try {
             $carts = Cart::join('products', 'products.id', '=', 'carts.product_id')
                 ->where('carts.user_id', $user_id)
-                ->get(['carts.id as cart_id', 'products.name', 'products.image', 'products.price', 'products.description', 'carts.quantity as cart_quantity']);
+                ->get(['
+                carts.id as cart_id',
+                    'products.name',
+                    'products.image',
+                    'products.price',
+                    'products.description',
+                    'carts.quantity as cart_quantity']);
 
             return response()->json([
                 'carts' => $carts
@@ -187,6 +194,7 @@ class CartController extends Controller
                     'message' => 'Permission issue!',
                 ], 403);
             }
+
             $carts = Cart::whereIn('id', $request->ids)->delete();
             return response()->json([
                 'message' => 'Carts were deleted successfully!',
