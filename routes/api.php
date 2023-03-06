@@ -34,6 +34,10 @@ Route::post('/resend-otp', [AuthController::class, 'reregister']);
 Route::post('/email/verify-otp/{id}',[VerificationController::class,'verifyOTP']);
 Route::post('/email/logout-otp/{id}',[VerificationController::class, 'destroy']);
 Route::post('/login', [AuthController::class, 'login']);
+// Password Reset Routes
+Route::post('/email/forgot-password', [AuthController::class, 'sendResetLinkEmail']);
+Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showResetForm']);
+Route::post('/reset-password', [ResetPasswordController::class, 'reset']);
 
 /**
  * Private authors routes.
