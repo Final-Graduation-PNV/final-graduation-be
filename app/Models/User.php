@@ -21,6 +21,13 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'email_verified',
+        'expired_time',
+        'confirmation_code',
+        'confirmation_code_expired_in',
+        'avatar',
+        'phone',
+        'birth',
         'address',
         'city',
     ];
