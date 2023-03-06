@@ -19,7 +19,7 @@ class AuthController extends Controller
     {
         $validation = $request->validated();
 
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $validation['email'])->first();
 
         if ($user) {
             if ($user['email_verified'] == true)
@@ -42,16 +42,17 @@ class AuthController extends Controller
                 'confirmation_code_expired_in' => Carbon::now()->addMinutes(2)
             ]
         ));
+
         try {
             Mail::to($user->email)->send(new UserVerification($user));
             return response()->json([
-                'message' => 'Registered,verify your email address to login',
+                'message' => 'Registered,verify your email address to login.',
                 'user' => $user
             ], 201);
         } catch (\Exception $err) {
             $user->delete();
             return response()->json([
-                'message' => 'Could not send email verification,please try again',
+                'message' => 'Could not send email verification! Please try again.',
             ], 500);
         }
     }
