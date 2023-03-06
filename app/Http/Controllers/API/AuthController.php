@@ -16,9 +16,7 @@ class AuthController extends Controller
         $user = User::create([
             'name'     => $validation['name'],
             'email'    => $validation['email'],
-            'password' => bcrypt($validation['password']),
-            'address'  => $validation['address'],
-            'city'     => $validation['city']
+            'password' => bcrypt($validation['password'])
         ]);
 
         DB::table('role_user')->insert([
