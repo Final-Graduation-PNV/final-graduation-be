@@ -20,6 +20,7 @@ class AdminSeeder extends Seeder
             'name' => 'admin',
             'email' => 'admin@gmail.com',
             'password' => Hash::make('@DThanh1508'),
+            'email_verified' => true,
             'city' => 'Kon Tum',
             'address' => 'Dak Pung - Dak Ro Nga - Dak To - Kon Tum'
         ]);
