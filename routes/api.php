@@ -6,6 +6,7 @@ use App\Http\Controllers\API\ShopOwner\ProductController;
 use App\Http\Controllers\API\User\CartController;
 use App\Http\Controllers\API\User\GetProductController;
 use App\Http\Controllers\API\User\UserController;
+use App\Http\Controllers\API\VerificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +30,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
  *
  */
 Route::post('/register', [AuthController::class, 'register']);
+Route::post('/resend-otp', [AuthController::class, 'reregister']);
+Route::post('/email/verify-otp/{id}',[VerificationController::class,'verifyOTP']);
+Route::post('/email/logout-otp/{id}',[VerificationController::class, 'destroy']);
 Route::post('/login', [AuthController::class, 'login']);
 
 /**
