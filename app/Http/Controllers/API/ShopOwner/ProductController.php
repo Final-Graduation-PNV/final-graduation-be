@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\ShopOwner;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -21,9 +22,16 @@ class ProductController extends Controller
             ], 404);
         }
 
-        return Product::join('categories', 'categories.id', '=', 'products.category_id')
+        $products = Product::join('categories', 'categories.id', '=', 'products.category_id')
             ->where('products.shop_id', $id)
-            ->get(['categories.name as category_name', 'products.*']);
+            ->get([
+                'categories.name as category_name',
+                'products.*'
+            ]);
+
+        return response()->json([
+            'products' => $products
+        ], 200);
     }
 
     public function getById(Request $request, $id)
@@ -44,11 +52,20 @@ class ProductController extends Controller
             ], 404);
         }
 
-        return Product::join('categories', 'categories.id', '=', 'products.category_id')
+        $product = Product::join('categories', 'categories.id', '=', 'products.category_id')
             ->join('users', 'users.id', '=', 'products.shop_id')
             ->where('products.id', $id)
             ->where('products.shop_id', $idd)
-            ->get(['users.name as shop_name', 'users.city as shop_city', 'categories.name as category_name', 'products.*']);
+            ->get([
+                'users.name as shop_name',
+                'users.city as shop_city',
+                'categories.name as category_name',
+                'products.*'
+            ]);
+
+        return response()->json([
+            'product' => $product
+        ], 200);
     }
 
     public function create(CreateProductRequest $request)
@@ -128,13 +145,19 @@ class ProductController extends Controller
         $product->update($request->all());
 
         return response()->json([
-            'product' => $product
-        ], 200);
+            'product' => $product,
+            'message' => 'Product was updated successfully!'
+        ], 201);
     }
 
     public function destroy($id)
     {
-        return Product::destroy($id);
+        $product = Product::destroy($id);
+
+        return response()->json([
+            'product' => $product,
+            'message' => 'Product was deleted successfully!'
+        ], 200);
     }
 
     public function search(Request $request)
@@ -148,9 +171,24 @@ class ProductController extends Controller
         }
 
         $name = $request->query('name');
-        return Product::join('categories', 'categories.id', '=', 'products.category_id')
+        $products = Product::join('categories', 'categories.id', '=', 'products.category_id')
             ->where('products.name', 'like', '%' . $name . '%')
             ->where('products.shop_id', $id)
             ->get(['products.*']);
+
+        return response()->json([
+            'product' => $products,
+            'message' => 'Search results'
+        ], 202);
+    }
+
+    public function category()
+    {
+        $categories = Category::select('id', 'name')
+            ->get();
+
+        return response()->json([
+            'categories' => $categories,
+        ], 200);
     }
 }

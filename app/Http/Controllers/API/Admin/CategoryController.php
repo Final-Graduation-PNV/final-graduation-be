@@ -12,7 +12,11 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        return Category::all();
+        $categories = Category::all();
+
+        return response()->json([
+            'categories' => $categories
+        ], 200);
     }
 
     public function getById($id)
@@ -39,9 +43,10 @@ class CategoryController extends Controller
         ]);
 
         $res = [
-            'category' => $category,
-            'message' => 'Category was created successfully!'
+            'message' => 'Category was created successfully!',
+            'category' => $category
         ];
+
         return response()->json($res, 201);
     }
 
@@ -61,8 +66,9 @@ class CategoryController extends Controller
         $category->update($request->all());
 
         return response()->json([
+            'message' => 'Category was updated successfully!',
             'category' => $category
-        ], 200);
+        ], 201);
     }
 
     public function destroy($id)

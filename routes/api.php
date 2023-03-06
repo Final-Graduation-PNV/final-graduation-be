@@ -69,6 +69,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/shop/products/{id}', [ProductController::class, 'getById']);
         Route::get('/shop/search', [ProductController::class, 'search']);
         Route::delete('/shop/products/{id}', [ProductController::class, 'destroy']);
+        Route::get('/shop/categories', [ProductController::class, 'category']);
     });
 
     /**
