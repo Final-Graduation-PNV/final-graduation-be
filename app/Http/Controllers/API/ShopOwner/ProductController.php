@@ -184,7 +184,8 @@ class ProductController extends Controller
 
     public function category()
     {
-        $categories = Category::all();
+        $categories = Category::select('id', 'name')
+            ->get();
 
         return response()->json([
             'categories' => $categories,
