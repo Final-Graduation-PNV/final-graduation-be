@@ -54,7 +54,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
          * CRUD cart.
          *
          */
-        Route::post('/user/carts', [CartController::class, 'add']);
+        Route::post('/user/carts/{id}', [CartController::class, 'add']);
         Route::get('/user/carts', [CartController::class, 'getCartByUserId']);
         Route::patch('/user/carts/{id}', [CartController::class, 'updateQuantity']);
         Route::delete('/user/carts/{id}', [CartController::class, 'deleteCart']);
