@@ -15,14 +15,13 @@ class CartController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    function add(Request $request): JsonResponse
+    function add(Request $request, $id): JsonResponse
     {
         $data = $request->validate([
-            'product_id' => 'required|integer|min:1',
             'quantity' => 'required|integer|min:1'
         ]);
 
-        $product = Product::find($data['product_id']);
+        $product = Product::find($id);
 
         if (!$product) {
             return response()->json([
@@ -30,10 +29,10 @@ class CartController extends Controller
             ], 404);
         }
 
-        $cartProduct = Product::where('id', $data['product_id'])->first();
+        $cartProduct = Product::where('id', $id)->first();
 
         $addedCart = Cart::where('user_id', $request->user()->id)
-            ->where('product_id', $data['product_id'])
+            ->where('product_id', $id)
             ->first();
 
         $pro = $product->quantity;
@@ -67,7 +66,7 @@ class CartController extends Controller
                 ], 400);
             default:
                 $cart = new Cart();
-                $cart->product_id = $data['product_id'];
+                $cart->product_id = $id;
                 $cart->user_id = $request->user()->id; // get user_id from logged in user
                 $cart->quantity = $data['quantity'];
                 $cart->save();
@@ -133,7 +132,7 @@ class CartController extends Controller
 
         $product = Product::find($cart->product_id);
 
-        if ($product->quantity < ($data['quantity'] + $cart->quantity)) {
+        if ($product->quantity < $data['quantity']) {
             return response()->json([
                 'message' => 'Your cart! The quantity must be less or equal than product quantity',
             ], 400);
