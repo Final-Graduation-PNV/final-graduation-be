@@ -88,6 +88,7 @@ class CartController extends Controller
         try {
             $carts = Cart::join('products', 'products.id', '=', 'carts.product_id')
                 ->where('carts.user_id', $user_id)
+                ->where('cars.status', false)
                 ->get(['carts.id as cart_id',
                     'products.name',
                     'products.image',

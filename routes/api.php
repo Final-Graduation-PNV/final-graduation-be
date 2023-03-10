@@ -5,6 +5,7 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\ShopOwner\ProductController;
 use App\Http\Controllers\API\User\CartController;
 use App\Http\Controllers\API\User\GetProductController;
+use App\Http\Controllers\API\User\PaymentController;
 use App\Http\Controllers\API\User\UserController;
 use App\Http\Controllers\API\VerificationController;
 use Illuminate\Http\Request;
@@ -60,6 +61,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::delete('/user/carts/{id}', [CartController::class, 'deleteCart']);
         Route::delete('/user/carts', [CartController::class, 'deleteMany']);
         Route::delete('/user/clear-carts', [CartController::class, 'clear']);
+        /**
+         *  Payment.
+         *
+         */
+        Route::patch('/user/payment', [PaymentController::class, 'payment']);
     });
 
     /**
