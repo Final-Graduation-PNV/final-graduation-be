@@ -65,7 +65,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
          *  Payment.
          *
          */
+        Route::patch('/user/detail-payment', [PaymentController::class, 'showAmount']);
         Route::patch('/user/payment', [PaymentController::class, 'payment']);
+        Route::patch('/user/cancel-payment', [PaymentController::class, 'cancelPayment']);
     });
 
     /**
