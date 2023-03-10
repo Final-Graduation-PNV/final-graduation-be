@@ -13,7 +13,7 @@ use Mockery\Exception;
 
 class PaymentController extends Controller
 {
-    public function payment(Request $request)
+    public function showAmount(Request $request)
     {
         try {
             $updates = Cart::join('products', 'products.id', '=', 'carts.product_id')
@@ -35,11 +35,13 @@ class PaymentController extends Controller
                     'users.email as user_email',
                     'users.phone as user_phone',
                     'users.address as user_address',
+                    'users.city as user_city',
                     'carts.id as cart_id',
                     'carts.quantity as cart_quantity',
                     'carts.amount as cart_amount',
                     'carts.status as cart_status',
                     'carts.note as cart_note',
+                    'products.id as product_id',
                     'products.name as product_name',
                     'products.image as product_image',
                     'products.price as product_price'
