@@ -88,14 +88,13 @@ class CartController extends Controller
         try {
             $carts = Cart::join('products', 'products.id', '=', 'carts.product_id')
                 ->where('carts.user_id', $user_id)
-                ->where('cars.status', false)
+                ->where('carts.status', false)
                 ->get(['carts.id as cart_id',
                     'products.name',
                     'products.image',
                     'products.price',
                     'products.description',
                     'carts.quantity as cart_quantity']);
-
             return response()->json([
                 'carts' => $carts
             ], 200);
