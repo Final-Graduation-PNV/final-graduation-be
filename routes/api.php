@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\Admin\CategoryController;
+use App\Http\Controllers\API\Admin\HandleShopOwnerController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\ShopOwner\ProductController;
 use App\Http\Controllers\API\User\CartController;
@@ -32,8 +33,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
  */
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/resend-otp', [AuthController::class, 'reregister']);
-Route::post('/email/verify-otp/{id}',[VerificationController::class,'verifyOTP']);
-Route::post('/email/logout-otp/{id}',[VerificationController::class, 'destroy']);
+Route::post('/email/verify-otp/{id}', [VerificationController::class, 'verifyOTP']);
+Route::post('/email/logout-otp/{id}', [VerificationController::class, 'destroy']);
 Route::post('/login', [AuthController::class, 'login']);
 
 /**
@@ -67,7 +68,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
          */
         Route::patch('/user/detail-payment', [PaymentController::class, 'showAmount']);
         Route::patch('/user/payment', [PaymentController::class, 'payment']);
-        Route::patch('/user/cancel-payment', [PaymentController::class, 'cancelPayment']);
     });
 
     /**
@@ -89,11 +89,20 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
      *
      */
     Route::group(['middleware' => ['role:admin']], function () {
+        /**
+         * CRUD category.
+         *
+         */
         Route::get('/admin/categories', [CategoryController::class, 'index']);
         Route::get('/admin/categories/{id}', [CategoryController::class, 'getById']);
         Route::post('/admin/categories', [CategoryController::class, 'create']);
         Route::patch('/admin/categories/{id}', [CategoryController::class, 'update']);
         Route::delete('/admin/categories/{id}', [CategoryController::class, 'destroy']);
+        /**
+         * Notification account renewal.
+         *
+         */
+        Route::get('/admin/users', [HandleShopOwnerController::class, 'notificationAccountRenewal']);
     });
 
     /**
