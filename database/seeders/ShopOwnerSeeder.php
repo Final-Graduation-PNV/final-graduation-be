@@ -23,7 +23,7 @@ class ShopOwnerSeeder extends Seeder
             'email_verified' => true,
             'city' => 'Kon Tum',
             'address' => 'Dak Pung - Dak Ro Nga - Dak To - Kon Tum',
-            'end_time' => Carbon::now()->addMonth(2)
+            'end_time' => Carbon::now()->addMonth(2)->format('Y-m-d')
         ]);
 
         DB::table('role_user')->insert([
