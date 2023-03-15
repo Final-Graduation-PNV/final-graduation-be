@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\BeShopOwnerRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
@@ -22,6 +23,9 @@ class UserController extends Controller
                 'message' => "User does not exist!"
             ], 400);
         }
+
+        $user->end_time = Carbon::now()->addMonths(2)->format('Y-m-d');
+        $user->save();
 
         $role_user = DB::table('role_user')
             ->where('user_id', $request->user_id)
@@ -43,6 +47,7 @@ class UserController extends Controller
 
         return response()->json([
             'message' => "You are a shop owner now!",
+            'expires' => $user->end_time
         ], 201);
     }
 }

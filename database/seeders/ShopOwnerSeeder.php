@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -21,7 +22,8 @@ class ShopOwnerSeeder extends Seeder
             'password' => Hash::make('@DThanh1508'),
             'email_verified' => true,
             'city' => 'Kon Tum',
-            'address' => 'Dak Pung - Dak Ro Nga - Dak To - Kon Tum'
+            'address' => 'Dak Pung - Dak Ro Nga - Dak To - Kon Tum',
+            'end_time' => Carbon::now()->addMonth(2)
         ]);
 
         DB::table('role_user')->insert([

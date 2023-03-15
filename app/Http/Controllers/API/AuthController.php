@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
 use App\Mail\UserVerification;
+use App\Models\Category;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -145,5 +146,15 @@ class AuthController extends Controller
         return [
             'message' => 'user logged out'
         ];
+    }
+
+    public function category()
+    {
+        $categories = Category::select('id', 'name')
+            ->get();
+
+        return response()->json([
+            'categories' => $categories,
+        ], 200);
     }
 }

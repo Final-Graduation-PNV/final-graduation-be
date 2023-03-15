@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\Admin\CategoryController;
+use App\Http\Controllers\API\Admin\HandleShopOwnerController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\ShopOwner\ProductController;
 use App\Http\Controllers\API\User\CartController;
@@ -32,9 +33,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
  */
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/resend-otp', [AuthController::class, 'reregister']);
-Route::post('/email/verify-otp/{id}',[VerificationController::class,'verifyOTP']);
-Route::post('/email/logout-otp/{id}',[VerificationController::class, 'destroy']);
+Route::post('/email/verify-otp/{id}', [VerificationController::class, 'verifyOTP']);
+Route::post('/email/logout-otp/{id}', [VerificationController::class, 'destroy']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/categories', [AuthController::class, 'category']);
 
 /**
  * Private authors routes.
@@ -48,9 +50,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::group(['middleware' => ['role:user']], function () {
         Route::get('/user/products/search/key', [GetProductController::class, 'searchKey']);   // Search products by product name, product description, category name and user city
         Route::get('/user/products/search/city-cate', [GetProductController::class, 'searchCityCate']);   // Search products by category name and user city
-        Route::post('/user/be-shop', [UserController::class, 'beShopOwner']);           // Register as a shop owner
         Route::get('/user/products', [GetProductController::class, 'index']);           // Get all products
         Route::get('/user/products/{id}', [GetProductController::class, 'getById']);    // Get detail products
+        Route::post('/user/be-shop', [UserController::class, 'beShopOwner']);           // Register as a shop owner
         /**
          * CRUD cart.
          *
@@ -67,7 +69,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
          */
         Route::patch('/user/detail-payment', [PaymentController::class, 'showAmount']);
         Route::patch('/user/payment', [PaymentController::class, 'payment']);
-        Route::patch('/user/cancel-payment', [PaymentController::class, 'cancelPayment']);
     });
 
     /**
@@ -81,7 +82,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/shop/products/{id}', [ProductController::class, 'getById']);
         Route::get('/shop/search', [ProductController::class, 'search']);
         Route::delete('/shop/products/{id}', [ProductController::class, 'destroy']);
-        Route::get('/shop/categories', [ProductController::class, 'category']);
     });
 
     /**
@@ -89,11 +89,20 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
      *
      */
     Route::group(['middleware' => ['role:admin']], function () {
+        /**
+         * CRUD category.
+         *
+         */
         Route::get('/admin/categories', [CategoryController::class, 'index']);
         Route::get('/admin/categories/{id}', [CategoryController::class, 'getById']);
         Route::post('/admin/categories', [CategoryController::class, 'create']);
         Route::patch('/admin/categories/{id}', [CategoryController::class, 'update']);
         Route::delete('/admin/categories/{id}', [CategoryController::class, 'destroy']);
+        /**
+         * Notification account renewal.
+         *
+         */
+        Route::get('/admin/users', [HandleShopOwnerController::class, 'notificationAccountRenewal']);
     });
 
     /**
