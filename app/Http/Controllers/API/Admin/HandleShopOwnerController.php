@@ -48,7 +48,6 @@ class HandleShopOwnerController extends Controller
                 ], 500);
             }
         }
-
         $response = [
             'valid_accounts' => $validArray,
             'expired_accounts' => $expireArray
