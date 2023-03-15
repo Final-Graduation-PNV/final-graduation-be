@@ -15,7 +15,7 @@ class HandleShopOwnerController extends Controller
     /**
      * @return JsonResponse
      */
-    public function notificationShopOwnerAccount(): JsonResponse
+    public function notificationShopOwnerAccount()
     {
         $shops = User::join('role_user', 'role_user.user_id', '=', 'users.id')
             ->where('role_user.role_id', 2)
@@ -36,6 +36,7 @@ class HandleShopOwnerController extends Controller
                         'date_expires' => $expires
                     ];
                 } else {
+                    DB::table('role_user')->where('user_id', $shop->id)->delete();
                     $expireArray[] = [
                         'name' => $shop->name,
                         'date_used' => $date,
