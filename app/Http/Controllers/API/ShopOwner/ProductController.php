@@ -5,7 +5,6 @@ namespace App\Http\Controllers\API\ShopOwner;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateProductRequest;
 use App\Http\Requests\UpdateProductRequest;
-use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -174,21 +173,11 @@ class ProductController extends Controller
         $products = Product::join('categories', 'categories.id', '=', 'products.category_id')
             ->where('products.name', 'like', '%' . $name . '%')
             ->where('products.shop_id', $id)
-            ->get(['products.*']);
+            ->get(['products.*', 'categories.name as category_name']);
 
         return response()->json([
             'product' => $products,
             'message' => 'Search results'
         ], 202);
-    }
-
-    public function category()
-    {
-        $categories = Category::select('id', 'name')
-            ->get();
-
-        return response()->json([
-            'categories' => $categories,
-        ], 200);
     }
 }

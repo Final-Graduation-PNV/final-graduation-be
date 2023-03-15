@@ -44,7 +44,8 @@ class GetProductController extends Controller
                 'users.name as shop_name',
                 'users.city as address_shop',
                 'users.id as shop_id',
-                'products.*'
+                'products.*',
+                'categories.name'
             ]);
 
         return response()->json([
@@ -61,7 +62,7 @@ class GetProductController extends Controller
             ->join('categories', 'categories.id', '=', 'products.category_id')
             ->where('categories.name', 'like', '%' . $cate . '%')
             ->where('users.city', 'like', '%' . $city . '%')
-            ->get(['products.*']);
+            ->get(['products.*', 'categories.name']);
 
         return response()->json([
             'products' => $products,

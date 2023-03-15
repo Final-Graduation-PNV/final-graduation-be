@@ -36,6 +36,7 @@ Route::post('/resend-otp', [AuthController::class, 'reregister']);
 Route::post('/email/verify-otp/{id}', [VerificationController::class, 'verifyOTP']);
 Route::post('/email/logout-otp/{id}', [VerificationController::class, 'destroy']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/categories', [AuthController::class, 'category']);
 
 /**
  * Private authors routes.
@@ -49,9 +50,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::group(['middleware' => ['role:user']], function () {
         Route::get('/user/products/search/key', [GetProductController::class, 'searchKey']);   // Search products by product name, product description, category name and user city
         Route::get('/user/products/search/city-cate', [GetProductController::class, 'searchCityCate']);   // Search products by category name and user city
-        Route::post('/user/be-shop', [UserController::class, 'beShopOwner']);           // Register as a shop owner
         Route::get('/user/products', [GetProductController::class, 'index']);           // Get all products
         Route::get('/user/products/{id}', [GetProductController::class, 'getById']);    // Get detail products
+        Route::post('/user/be-shop', [UserController::class, 'beShopOwner']);           // Register as a shop owner
         /**
          * CRUD cart.
          *
@@ -81,7 +82,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/shop/products/{id}', [ProductController::class, 'getById']);
         Route::get('/shop/search', [ProductController::class, 'search']);
         Route::delete('/shop/products/{id}', [ProductController::class, 'destroy']);
-        Route::get('/shop/categories', [ProductController::class, 'category']);
     });
 
     /**

@@ -24,7 +24,7 @@ class UserController extends Controller
             ], 400);
         }
 
-        $user->end_time = Carbon::now()->addMonths(2);
+        $user->end_time = Carbon::now()->addMonths(2)->format('Y-m-d');
         $user->save();
 
         $role_user = DB::table('role_user')
@@ -47,6 +47,7 @@ class UserController extends Controller
 
         return response()->json([
             'message' => "You are a shop owner now!",
+            'expires' => $user->end_time
         ], 201);
     }
 }
