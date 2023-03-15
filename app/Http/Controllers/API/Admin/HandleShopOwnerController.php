@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -11,35 +12,48 @@ use function Symfony\Component\Translation\t;
 
 class HandleShopOwnerController extends Controller
 {
-    public function notificationAccountRenewal(Request $request)
+    /**
+     * @return JsonResponse
+     */
+    public function notificationShopOwnerAccount(): JsonResponse
     {
-        $shops = User::join('role_user as role', 'role.user_id', '=', 'users.id')
-            ->where('users.id', 2)
-            ->first('users.*');
+        $shops = User::join('role_user', 'role_user.user_id', '=', 'users.id')
+            ->where('role_user.role_id', 2)
+            ->get(['users.*']);
 
-        if ($shops && $shops->end_time) {
-            $date = Carbon::createFromFormat('Y-m-d H:i:s', $shops->end_time)->format('Y-m-d');
-        } else {
-            return 'Something went wrong!';
+        $validArray = [];
+        $expireArray = [];
+
+        foreach ($shops as $shop) {
+            if ($shop && $shop->end_time) {
+                $date = Carbon::createFromFormat('Y-m-d H:i:s', $shop->end_time)->format('Y-m-d');
+                $expires = Carbon::now()->format('Y-m-d');
+
+                if (!($date === $expires)) {
+                    $validArray[] = [
+                        'name' => $shop->name,
+                        'date_used' => $date,
+                        'date_expires' => $expires
+                    ];
+                } else {
+                    $expireArray[] = [
+                        'name' => $shop->name,
+                        'date_used' => $date,
+                        'date_expires' => $expires
+                    ];
+                }
+            } else {
+                return response()->json([
+                    'message' => 'Something went wrong!',
+                ], 500);
+            }
         }
 
-        $expires = Carbon::now()->format('Y-m-d');
-
-        $merge = [
-            'date_carbon' => $date,
-            'date_account' =>$expires
+        $response = [
+            'valid_accounts' => $validArray,
+            'expired_accounts' => $expireArray
         ];
 
-        if (!($date === $expires)) {
-            return response()->json([
-                'message' => 'Your account is still valid!',
-                'dates' => $merge
-            ],200);
-        }
-
-        return response()->json([
-            'message' => 'Your 2-month free account has expired!',
-            'date' => $merge
-        ],402);
+        return response()->json($response);
     }
 }
