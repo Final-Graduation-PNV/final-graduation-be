@@ -13,8 +13,13 @@ class UserController extends Controller
 {
     public function beShopOwner(Request $request)
     {
-        $request->validate([
-            'user_id' => 'required|integer|min:1'
+        $data = $request->validate([
+            'user_id' => 'required|integer|min:1',
+            'phone' => 'required',
+            'birth' => 'required',
+            'gender' => 'required',
+            'address' => 'required',
+            'city' => 'required'
         ]);
 
         $user = User::find($request->user_id);
@@ -25,6 +30,11 @@ class UserController extends Controller
         }
 
         $user->end_time = Carbon::now()->addMonths(2)->format('Y-m-d');
+        $user->phone = $data['phone'];
+        $user->birth = $data['birth'];
+        $user->gender = $data['gender'];
+        $user->address = $data['address'];
+        $user->city = $data['city'];
         $user->save();
 
         $role_user = DB::table('role_user')
