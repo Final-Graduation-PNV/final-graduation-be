@@ -102,7 +102,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
          * Notification account renewal.
          *
          */
-        Route::get('/admin/users', [HandleShopOwnerController::class, 'notificationShopOwnerAccount']);
+        Route::get('/admin/shops', [HandleShopOwnerController::class, 'notificationShopOwnerAccount']);
     });
 
     /**
