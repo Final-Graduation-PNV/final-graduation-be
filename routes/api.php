@@ -32,7 +32,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
  *
  */
 Route::post('/register', [AuthController::class, 'register']);
-Route::post('/resend-otp', [AuthController::class, 'reregister']);
+Route::post('/email/resend-otp', [AuthController::class, 'reregister']);
 Route::post('/email/verify-otp/{id}', [VerificationController::class, 'verifyOTP']);
 Route::post('/email/logout-otp/{id}', [VerificationController::class, 'destroy']);
 Route::post('/login', [AuthController::class, 'login']);
