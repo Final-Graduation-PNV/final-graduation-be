@@ -4,6 +4,7 @@ use App\Http\Controllers\API\Admin\CategoryController;
 use App\Http\Controllers\API\Admin\HandleShopOwnerController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\ShopOwner\ProductController;
+use App\Http\Controllers\API\ShopOwner\ShopOwnerController;
 use App\Http\Controllers\API\User\CartController;
 use App\Http\Controllers\API\User\GetProductController;
 use App\Http\Controllers\API\User\PaymentController;
@@ -82,6 +83,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/shop/products/{id}', [ProductController::class, 'getById']);
         Route::get('/shop/search', [ProductController::class, 'search']);
         Route::delete('/shop/products/{id}', [ProductController::class, 'destroy']);
+        Route::get('/shop/check', [ShopOwnerController::class, 'checkAccount']);
     });
 
     /**

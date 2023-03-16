@@ -36,7 +36,6 @@ class HandleShopOwnerController extends Controller
                         'date_expires' => $expires
                     ];
                 } else {
-                    DB::table('role_user')->where('user_id', $shop->id)->delete();
                     $expireArray[] = [
                         'name' => $shop->name,
                         'date_used' => $date,
