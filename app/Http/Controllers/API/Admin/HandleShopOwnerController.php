@@ -31,12 +31,14 @@ class HandleShopOwnerController extends Controller
 
                 if (!($date === $expires)) {
                     $validArray[] = [
+                        'shop_id' => $shop->id,
                         'name' => $shop->name,
                         'date_used' => $date,
                         'date_expires' => $expires
                     ];
                 } else {
                     $expireArray[] = [
+                        'shop_id' => $shop->id,
                         'name' => $shop->name,
                         'date_used' => $date,
                         'date_expires' => $expires
