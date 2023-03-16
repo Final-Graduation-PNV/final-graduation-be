@@ -22,9 +22,8 @@ class ShopOwnerController extends Controller
         if ($shop && $shop->end_time) {
             $date = Carbon::createFromFormat('Y-m-d H:i:s', $shop->end_time)->format('Y-m-d');
             $expires = Carbon::now()->format('Y-m-d');
-            $expires1 = Carbon::now()->format('Y-m-d');
 
-            if ($expires1 === $expires) {
+            if ($date === $expires) {
                 $delete = DB::table('role_user')
                     ->where('role_id', 2)
                     ->where('user_id', $id)
@@ -62,4 +61,5 @@ class ShopOwnerController extends Controller
             ], 500);
         }
     }
+
 }
