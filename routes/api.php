@@ -85,6 +85,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::delete('/shop/products/{id}', [ProductController::class, 'destroy']);
         Route::get('/shop/check', [ShopOwnerController::class, 'checkoutAccount']);
         Route::get('/shop/vnpay/create', [ShopOwnerController::class, 'checkoutPayMent']);
+        Route::get('/shop/vnpay/payment', [ShopOwnerController::class, 'vnpayPayment']);
+        Route::get('/shop/vnpay/return', [ShopOwnerController::class, 'vnpayReturn']);
     });
 
     /**
