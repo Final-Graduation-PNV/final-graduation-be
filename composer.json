@@ -4,7 +4,14 @@
     "description": "The Laravel Framework.",
     "keywords": ["framework", "laravel"],
     "license": "MIT",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/trungpv1601/laravel-vnpay"
+        }
+    ],
     "require": {
+        "trungpv1601/laravel-vnpay": "dev-master",
         "php": "^8.1",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.0",
