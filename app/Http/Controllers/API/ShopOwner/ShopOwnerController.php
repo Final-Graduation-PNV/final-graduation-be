@@ -131,9 +131,8 @@ class ShopOwnerController extends Controller
         }
     }
 
-    public function vnpayPayment(Request $request)
+    public function vnpayPayment()
     {
-        $id = $request->user()->id;
         $vnp_HashSecret = "WTLWKPUMSRUSENTTMVAJQNJDELXFQJOR";
 
         $inputData = array();
@@ -165,9 +164,9 @@ class ShopOwnerController extends Controller
         $vnp_Amount = $inputData['vnp_Amount'] / 100; // Payment amount VNPAY feedback
 
         $Status = 0; // Is the payment status of the transaction that does not have an IPN stored in the merchant's system in the direction of the payment URL origination.
-        $orderId = $inputData['vnp_TxnRef'];
-
-        $user = User::find($id);
+        $orderId = $inputData['vnp_TxnRef']; // form userId-orderId
+         $userId = explode("-", $orderId)[1];
+        $user = User::find($userId);
 
         try {
             if ($secureHash == $vnp_SecureHash) {
@@ -210,7 +209,7 @@ class ShopOwnerController extends Controller
             $returnData['RspCode'] = '99';
             $returnData['Message'] = 'Unknow error';
         }
-        echo json_encode($returnData);
+        return json_encode($returnData);
     }
 
     public function vnpayReturn(Request $request)
