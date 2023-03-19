@@ -212,6 +212,7 @@ class ShopOwnerController extends Controller
         }
         $returnData['RspCode'] = '00';
         $returnData['Message'] = 'Confirm Success';
+//        test
         return response()->json($returnData);
     }
 
