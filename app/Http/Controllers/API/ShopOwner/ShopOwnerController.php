@@ -134,7 +134,7 @@ class ShopOwnerController extends Controller
 
     public function vnpayPayment()
     {
-        Log::error('An error occurred while processing the request.');
+//        Log::error('An error occurred while processing the request.');
 
         $vnp_HashSecret = "WTLWKPUMSRUSENTTMVAJQNJDELXFQJOR";
 
@@ -213,8 +213,6 @@ class ShopOwnerController extends Controller
             $returnData['RspCode'] = '99';
             $returnData['Message'] = 'Unknow error';
         }
-        $returnData['RspCode'] = '00';
-        $returnData['Message'] = 'Confirm Success';
         return response()->json($returnData);
     }
 
