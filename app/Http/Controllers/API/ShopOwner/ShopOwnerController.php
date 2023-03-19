@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Process;
 
@@ -133,6 +134,8 @@ class ShopOwnerController extends Controller
 
     public function vnpayPayment()
     {
+        Log::error('An error occurred while processing the request.');
+
         $vnp_HashSecret = "WTLWKPUMSRUSENTTMVAJQNJDELXFQJOR";
 
         $inputData = array();
@@ -212,7 +215,6 @@ class ShopOwnerController extends Controller
         }
         $returnData['RspCode'] = '00';
         $returnData['Message'] = 'Confirm Success';
-//        test
         return response()->json($returnData);
     }
 
