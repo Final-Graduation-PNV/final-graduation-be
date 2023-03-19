@@ -38,7 +38,6 @@ Route::post('/email/verify-otp/{id}', [VerificationController::class, 'verifyOTP
 Route::post('/email/logout-otp/{id}', [VerificationController::class, 'destroy']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/categories', [AuthController::class, 'category']);
-Route::get('/shop/vnpay/payment', [ShopOwnerController::class, 'vnpayPayment'])->name('return');
 
 /**
  * Private authors routes.
