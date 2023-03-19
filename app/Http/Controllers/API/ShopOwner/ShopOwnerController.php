@@ -73,7 +73,7 @@ class ShopOwnerController extends Controller
         $vnp_TmnCode = "VPUPIB82";// Terminal ID
         $vnp_HashSecret = "WTLWKPUMSRUSENTTMVAJQNJDELXFQJOR"; // Secret Key
 
-        $vnp_TxnRef = date('YmdHis') . $id; // Code orders. In fact, the Merchant needs to insert the order into the DB and send this code to VNPAY
+        $vnp_TxnRef = date('YmdHis') ."-". $id; // Code orders. In fact, the Merchant needs to insert the order into the DB and send this code to VNPAY
         $vnp_OrderInfo = "Payment continues using Shop Owner account";
         $vnp_OrderType = 250000;
         $vnp_Amount = 200000 * 100;
