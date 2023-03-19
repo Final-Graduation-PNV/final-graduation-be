@@ -73,7 +73,7 @@ class ShopOwnerController extends Controller
         $vnp_TmnCode = "VPUPIB82";// Terminal ID
         $vnp_HashSecret = "WTLWKPUMSRUSENTTMVAJQNJDELXFQJOR"; // Secret Key
 
-        $vnp_TxnRef = date('YmdHis') . $id; // Code orders. In fact, the Merchant needs to insert the order into the DB and send this code to VNPAY
+        $vnp_TxnRef = date('YmdHis') ."-". $id; // Code orders. In fact, the Merchant needs to insert the order into the DB and send this code to VNPAY
         $vnp_OrderInfo = "Payment continues using Shop Owner account";
         $vnp_OrderType = 250000;
         $vnp_Amount = 200000 * 100;
@@ -133,7 +133,6 @@ class ShopOwnerController extends Controller
 
     public function vnpayPayment(Request $request)
     {
-        $id = $request->user()->id;
         $vnp_HashSecret = "WTLWKPUMSRUSENTTMVAJQNJDELXFQJOR";
 
         $inputData = array();
@@ -165,9 +164,9 @@ class ShopOwnerController extends Controller
         $vnp_Amount = $inputData['vnp_Amount'] / 100; // Payment amount VNPAY feedback
 
         $Status = 0; // Is the payment status of the transaction that does not have an IPN stored in the merchant's system in the direction of the payment URL origination.
-        $orderId = $inputData['vnp_TxnRef'];
-
-        $user = User::find($id);
+        $orderId = $inputData['vnp_TxnRef']; // form userId-orderId
+         $userId = explode("-", $orderId)[1];
+        $user = User::find($userId);
 
         try {
             if ($secureHash == $vnp_SecureHash) {
