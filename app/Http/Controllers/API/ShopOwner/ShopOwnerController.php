@@ -165,7 +165,7 @@ class ShopOwnerController extends Controller
 
         $Status = 0; // Is the payment status of the transaction that does not have an IPN stored in the merchant's system in the direction of the payment URL origination.
         $orderId = $inputData['vnp_TxnRef']; // form userId-orderId
-         $userId = explode("-", $orderId)[1];
+        $userId = explode("-", $orderId)[1];
         $user = User::find($userId);
 
         try {
@@ -181,10 +181,11 @@ class ShopOwnerController extends Controller
                                 $Status = 2;
                             }
                             if ($Status == 1) {
-                                if (isset($orderDB->user) && $orderDB->user->email !== null) {
-                                    Mail::to($user->email)->send(new RenewalShopOwnerAccount($user));
-                                }
-                            } else if ($Status == 2) {
+                                $user->renewal = true;
+                                $user->save();
+                                Mail::to($user->email)->send(new RenewalShopOwnerAccount($user));
+                            }
+                            else {
                                 return response()->json("Account renewal failed!", 402);
                             }
                             $returnData['RspCode'] = '00';
@@ -239,12 +240,19 @@ class ShopOwnerController extends Controller
         $secureHash = hash_hmac('sha512', $hashData, $vnp_HashSecret);
         if ($secureHash == $vnp_SecureHash) {
             if ($_GET['vnp_ResponseCode'] == '00') {
-                return response()->json("Account renewal successful!", 200);
+                return response()->json([
+                    'message' => "Account renewal successful!",
+                    'data' => $secureHash
+                ], 200);
             } else {
-                return response()->json("Account renewal failed!", 402);
+                return response()->json([
+                    'message' => "Account renewal failed!",
+                ], 402);
             }
         } else {
-            return response()->json("Invalid signature!", 422);
+            return response()->json([
+                'message' => "Invalid signature!",
+            ], 422);
         }
     }
 }
