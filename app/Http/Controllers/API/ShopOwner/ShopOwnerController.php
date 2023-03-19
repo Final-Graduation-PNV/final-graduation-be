@@ -210,6 +210,8 @@ class ShopOwnerController extends Controller
             $returnData['RspCode'] = '99';
             $returnData['Message'] = 'Unknow error';
         }
+        $returnData['RspCode'] = '00';
+        $returnData['Message'] = 'Confirm Success';
         return json_encode($returnData);
     }
 
