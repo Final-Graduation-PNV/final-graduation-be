@@ -212,7 +212,8 @@ class ShopOwnerController extends Controller
         }
         $returnData['RspCode'] = '00';
         $returnData['Message'] = 'Confirm Success';
-        return json_encode($returnData);
+//        test
+        return response()->json($returnData);
     }
 
     public function vnpayReturn(Request $request)
