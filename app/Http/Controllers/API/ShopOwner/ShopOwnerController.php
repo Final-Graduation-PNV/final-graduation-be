@@ -239,11 +239,6 @@ class ShopOwnerController extends Controller
         $secureHash = hash_hmac('sha512', $hashData, $vnp_HashSecret);
         if ($secureHash == $vnp_SecureHash) {
             if ($_GET['vnp_ResponseCode'] == '00') {
-                $id = $request->user()->id;
-                $user = User::find($id);
-
-                $user->renewal = true;
-                $user->save();
                 return response()->json("Account renewal successful!", 200);
             } else {
                 return response()->json("Account renewal failed!", 402);
