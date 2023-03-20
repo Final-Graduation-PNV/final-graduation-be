@@ -29,6 +29,8 @@ class CreateUsersTable extends Migration
             $table->string('address')->nullable();
             $table->string('city')->nullable();
             $table->boolean('renewal')->default(false);
+            $table->string('longitude')->nullable();
+            $table->string('latitude')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

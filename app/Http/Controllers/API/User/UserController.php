@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\API\User;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\BeShopOwnerRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -13,8 +12,9 @@ class UserController extends Controller
 {
     public function beShopOwner(Request $request)
     {
+        $id = $request->user()->id;
+
         $data = $request->validate([
-            'user_id' => 'required|integer|min:1',
             'phone' => 'required',
             'birth' => 'required',
             'gender' => 'required',
@@ -22,7 +22,7 @@ class UserController extends Controller
             'city' => 'required'
         ]);
 
-        $user = User::find($request->user_id);
+        $user = User::find($id);
         if (!$user) {
             return response()->json([
                 'message' => "User does not exist!"
@@ -35,10 +35,12 @@ class UserController extends Controller
         $user->gender = $data['gender'];
         $user->address = $data['address'];
         $user->city = $data['city'];
+        $user->longitude = $data['longitude'];
+        $user->latitude = $data['latitude'];
         $user->save();
 
         $role_user = DB::table('role_user')
-            ->where('user_id', $request->user_id)
+            ->where('user_id', $id)
             ->where('role_id', 2)
             ->first();
 
@@ -50,13 +52,14 @@ class UserController extends Controller
 
         DB::table('role_user')->insert(
             array(
-                'user_id' => $request->user_id,
+                'user_id' => $id,
                 'role_id' => 2
             )
         );
 
         return response()->json([
             'message' => "You are a shop owner now!",
+            'user_id' => $id,
             'expires' => $user->end_time
         ], 201);
     }
