@@ -10,15 +10,6 @@ use Illuminate\Validation\Rule;
 
 class CategoryController extends Controller
 {
-    public function index()
-    {
-        $categories = Category::all();
-
-        return response()->json([
-            'categories' => $categories
-        ], 200);
-    }
-
     public function getById($id)
     {
         $category = Category::find($id);
