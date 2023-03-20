@@ -167,7 +167,7 @@ class ShopOwnerController extends Controller
         $vnp_Amount = $inputData['vnp_Amount'] / 100; // Payment amount VNPAY feedback
 
         $Status = 0; // Is the payment status of the transaction that does not have an IPN stored in the merchant's system in the direction of the payment URL origination.
-        $orderId = $inputData['vnp_TxnRef']; // form userId-orderId
+        $orderId = $inputData['vnp_TxnRef']; // form orderId-userId
         $userId = explode("-", $orderId)[1];
         $user = User::find($userId);
 
