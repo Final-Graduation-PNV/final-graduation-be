@@ -3,15 +3,10 @@
 namespace App\Http\Controllers\API\ShopOwner;
 
 use App\Http\Controllers\Controller;
-use App\Mail\RenewalShopOwnerAccount;
 use App\Models\User;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Process;
 
 class ShopOwnerController extends Controller
 {

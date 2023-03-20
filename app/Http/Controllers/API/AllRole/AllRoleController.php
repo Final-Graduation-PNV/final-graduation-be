@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Mail\RenewalShopOwnerAccount;
 use App\Models\Category;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
 class AllRoleController extends Controller
