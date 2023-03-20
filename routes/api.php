@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\API\Admin\CategoryController;
 use App\Http\Controllers\API\Admin\HandleShopOwnerController;
-use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\Authentication\AuthController;
 use App\Http\Controllers\API\ShopOwner\ProductController;
 use App\Http\Controllers\API\ShopOwner\ShopOwnerController;
 use App\Http\Controllers\API\User\CartController;
@@ -34,12 +34,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
  */
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/email/resend-otp', [AuthController::class, 'reregister']);
-Route::post('/email/verify-otp/{id}', [VerificationController::class, 'verifyOTP']);
-Route::post('/email/logout-otp/{id}', [VerificationController::class, 'destroy']);
+Route::post('/email/verify-otp/{id}', [AuthController::class, 'verifyOTP']);
+Route::post('/email/logout-otp/{id}', [AuthController::class, 'cancel']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::get('/categories', [AuthController::class, 'category']);
-Route::get('/shop/vnpay/payment', [ShopOwnerController::class, 'vnpayPayment']);
-Route::get('/shop/vnpay/return', [ShopOwnerController::class, 'vnpayReturn'])->name('return');
+
+Route::get('/categories', [CategoryController::class, 'index']);
+Route::get('/payment', [ShopOwnerController::class, 'vnpayPayment']);
+Route::get('/return', [ShopOwnerController::class, 'vnpayReturn'])->name('return');
 
 /**
  * Private authors routes.
@@ -97,7 +98,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
          * CRUD category.
          *
          */
-        Route::get('/admin/categories', [CategoryController::class, 'index']);
         Route::get('/admin/categories/{id}', [CategoryController::class, 'getById']);
         Route::post('/admin/categories', [CategoryController::class, 'create']);
         Route::patch('/admin/categories/{id}', [CategoryController::class, 'update']);
