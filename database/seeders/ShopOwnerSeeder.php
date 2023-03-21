@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Shop;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -23,6 +24,17 @@ class ShopOwnerSeeder extends Seeder
             'email_verified' => true,
             'city' => 'Kon Tum',
             'address' => 'Dak Pung - Dak Ro Nga - Dak To - Kon Tum',
+            'end_time' => Carbon::now()->addMonth(2)->format('Y-m-d')
+        ]);
+
+        $shop = Shop::create([
+            'name' => 'shop',
+            'phone' => '982934861',
+            'birth' => '2002-08-15',
+            'gender' => 'male',
+            'address' => 'Dak Pung - Dak Ro Nga - Dak To - Kon Tum',
+            'city' => 'Kon Tum',
+            'user_id' => $user->id,
             'end_time' => Carbon::now()->addMonth(2)->format('Y-m-d')
         ]);
 

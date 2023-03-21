@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\API\ShopOwner;
 
 use App\Http\Controllers\Controller;
+use App\Models\Shop;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class ShopOwnerController extends Controller
@@ -61,6 +62,49 @@ class ShopOwnerController extends Controller
             return response()->json([
                 'message' => 'An error occurred while processing your request.',
             ], 500);
+        }
+    }
+
+    public function profile(Request $request)
+    {
+        try {
+            $shop = Shop::join('users', 'users.id', '=', 'shops.user_id')
+                ->first(['shops.*', 'users.email']);
+
+            return response()->json([
+                'shop' => $shop
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json(['message' => 'An error occurred while fetching user data'], 500);
+        }
+    }
+
+    public function editProfile(Request $request)
+    {
+        try {
+            $id = $request->user()->id;
+
+            $shop = Shop::where('user_id', $id)->first();
+
+            // If user not found, return error
+            if (!$shop) {
+                return response()->json(['message' => 'Shop not found'], 404);
+            }
+
+            $data = $request->only(['name', 'avatar', 'phone', 'birth', 'gender', 'address', 'city']);
+
+            // If no data was submitted, return success message
+            if (empty(array_filter($data))) {
+                return response()->json(['message' => 'Information has not changed!'], 200);
+            }
+
+            // Update shop's profile
+            $shop->fill($data);
+            $shop->save();
+
+            return response()->json(['message' => 'Profile updated successfully!'], 200);
+        } catch (Exception $e) {
+            return response()->json(['message' => 'An error occurred while updating user profile'], 500);
         }
     }
 
