@@ -116,7 +116,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
          *
          */
         Route::controller(ShopOwnerController::class)->group(function () {
-            Route::get('/shop/check','checkoutAccount');
+            Route::patch('/shop/check','checkoutAccount');
             Route::get('/shop/vnpay/create','checkoutPayment');
         });
     });
