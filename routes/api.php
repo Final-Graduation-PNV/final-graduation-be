@@ -46,7 +46,7 @@ Route::controller(AuthController::class)->group(function () {
  */
 Route::controller(AllRoleController::class)->group(function () {
     Route::get('/get-shop', 'getAllShopOwner');
-    Route::get('/categories','index');
+    Route::get('/categories','getCategories');
     Route::get('/payment','vnpayPayment');
     Route::get('/return','vnpayReturn')->name('return');
 });
