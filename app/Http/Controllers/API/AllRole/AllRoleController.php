@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\RenewalShopOwnerAccount;
 use App\Models\Category;
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\Mail;
 
 class AllRoleController extends Controller
@@ -145,4 +146,36 @@ class AllRoleController extends Controller
             ], 422);
         }
     }
+
+    /**
+     * Get all shop owners.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getAllShopOwner()
+    {
+        try {
+            $shopOwners = User::join('role_user', 'role_user.user_id', '=', 'users.id')
+                ->where('role_user.role_id', 2)
+                ->select([
+                    'users.id as id',
+                    'users.name as name',
+                    'users.phone as phone',
+                    'users.address as address',
+                    'users.city as city',
+                    'users.longitude',
+                    'users.latitude'
+                ])
+                ->get();
+
+            if ($shopOwners->isEmpty()) {
+                throw new \Exception('No shop owners found.');
+            }
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 404);
+        }
+
+        return response()->json(['shop_owners' => $shopOwners], 200);
+    }
+
 }
