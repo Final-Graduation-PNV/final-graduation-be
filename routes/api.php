@@ -68,7 +68,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::get('/user/products/{id}','getById');                        // Get detail products
         });
 
-        Route::post('/user/be-shop', [UserController::class, 'beShopOwner']);   // Register as a shop owner
+        Route::controller(UserController::class)->group(function () {
+            Route::get('/user/profile','profile');
+            Route::patch('/user/profile','editProfile');
+            Route::post('/user/be-shop','beShopOwner');   // Register as a shop owner
+        });
 
         /**
          * Group crud cart.
