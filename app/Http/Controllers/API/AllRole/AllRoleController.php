@@ -11,7 +11,12 @@ use Illuminate\Support\Facades\Mail;
 
 class AllRoleController extends Controller
 {
-    public function index()
+    /**
+     * Get all categories.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getCategories()
     {
         $categories = Category::all();
 
