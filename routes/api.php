@@ -34,9 +34,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
  */
 Route::controller(AuthController::class)->group(function () {
     Route::post('/register','register');
-    Route::post('/email/resend-otp','reregister');
-    Route::post('/email/verify-otp/{id}','verifyOTP');
-    Route::post('/email/logout-otp/{id}','cancel');
+    Route::post('/users/{id}/verify','verifyEmail');
+    Route::post('/users/resend-otp','resendOTP');
+    Route::post('/users/{id}','cancel');
     Route::post('/login','login');
 });
 
@@ -147,5 +147,5 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
      * Post for sign out.
      *
      */
-    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::delete('/logout', [AuthController::class, 'logout']);
 });
