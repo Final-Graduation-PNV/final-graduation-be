@@ -90,11 +90,11 @@ class PaymentController extends Controller
             ->join('users', 'users.id', '=', 'carts.user_id')
             ->where('carts.user_id', $request->user()->id)
             ->whereIn('carts.id', $request->ids)
-            ->get(['users.name as user_name',
-                'users.email as user_email',
-                'users.phone as user_phone',
-                'users.address as user_address',
-                'users.city as user_city',
+            ->get(['carts.name as user_name',
+                'carts.email as user_email',
+                'carts.phone as user_phone',
+                'carts.address as user_address',
+                'carts.city as user_city',
                 'carts.id as cart_id',
                 'carts.quantity as cart_quantity',
                 'carts.amount as cart_amount',
