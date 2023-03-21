@@ -86,12 +86,12 @@ class PaymentController extends Controller
             $cart->status = true;
             $cart->save();
         }
-        $data = Cart::join('products', 'products.id', '=', 'carts.product_id')
+        $payment = Cart::join('products', 'products.id', '=', 'carts.product_id')
             ->join('users', 'users.id', '=', 'carts.user_id')
             ->where('carts.user_id', $request->user()->id)
             ->whereIn('carts.id', $request->ids)
             ->get(['carts.name as user_name',
-                'carts.email as user_email',
+                'users.email as user_email',
                 'carts.phone as user_phone',
                 'carts.address as user_address',
                 'carts.city as user_city',
@@ -105,9 +105,9 @@ class PaymentController extends Controller
                 'products.image as product_image',
                 'products.price as product_price'
             ]);
-        Mail::to($user[0]['email'])->send(new UserBill($data));
+        Mail::to($user[0]['email'])->send(new UserBill($payment));
         return response()->json([
-            'message' => 'Check your email address to see bill detail.'
+            'message' => 'Check your email( '. $user[0]['email'].') to see bill detail.'
         ], 201);
     }
 }
