@@ -147,5 +147,5 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
      * Post for sign out.
      *
      */
-    Route::delete('/logout', [AuthController::class, 'logout']);
+    Route::post('/logout', [AuthController::class, 'logout']);
 });
