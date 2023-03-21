@@ -35,8 +35,8 @@ class UserController extends Controller
         $user->gender = $data['gender'];
         $user->address = $data['address'];
         $user->city = $data['city'];
-        $user->longitude = $data['longitude'];
-        $user->latitude = $data['latitude'];
+        $user->longitude = $request->longitude;
+        $user->latitude = $request->latitude;
         $user->save();
 
         $role_user = DB::table('role_user')
