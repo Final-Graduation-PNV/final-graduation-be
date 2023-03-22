@@ -70,6 +70,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::get('/user/products/search/city-cate','searchCityCate');     // Search products by category name and user city
             Route::get('/user/products','index');                               // Get all products
             Route::get('/user/products/{id}','getById');                        // Get detail products
+            Route::get('/user/products/near','getShopNearUser');
         });
 
         Route::controller(UserController::class)->group(function () {
