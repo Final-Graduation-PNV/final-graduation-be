@@ -15,7 +15,7 @@
     <meta name="format-detection" content="email=no">
     <!-- disable auto email linking in iOS -->
     <meta name="author" content="Simple-Pleb.com">
-    <title>Payment Thank You</title>
+    <title>Order Thank You</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <style type="text/css">
@@ -102,7 +102,7 @@
                             <tr>
                                 <td class="center-text"  align="center" style="font-family:'Roboto Slab',Arial,Helvetica,sans-serif;font-size:42px;line-height:52px;font-weight:400;font-style:normal;color:#FFFFFF;text-decoration:none;letter-spacing:0px;">
                                     <div  >
-                                        Thanks for your payment
+                                        Thanks for your order
                                     </div>
                                 </td>
                             </tr>
@@ -179,7 +179,7 @@
                                                     <tr  >
                                                         <td class="center-text"  align="left" style="font-family:'Roboto Slab',Arial,Helvetica,sans-serif;font-size:20px;line-height:26px;font-weight:400;font-style:normal;color:#343e9e;text-decoration:none;letter-spacing:0px;">
                                                             <div align="left" style="font-family:'Poppins',Arial,Helvetica,sans-serif;font-size:14px;line-height:26px;font-weight:400;font-style:italic;color:#343e9e;text-decoration:none;letter-spacing:0px;">
-                                                                Purchase ID: {{$cart->cart_id}}
+                                                                Purchase ID: #000{{$cart['cart_id']}}
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -202,7 +202,7 @@
                                                     <tr  >
                                                         <td class="center-text"  align="left" style="font-family:'Roboto Slab',Arial,Helvetica,sans-serif;font-size:20px;line-height:26px;font-weight:400;font-style:normal;color:#343e9e;text-decoration:none;letter-spacing:0px;">
                                                             <div align="left" style="font-family:'Poppins',Arial,Helvetica,sans-serif;font-size:14px;line-height:26px;font-weight:400;font-style:italic;color:#343e9e;text-decoration:none;letter-spacing:0px;">
-                                                                Name product: {{$cart->product_name}}
+                                                                Name product: {{$cart['product_name']}}
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -221,7 +221,7 @@
                                                     <tr  >
                                                         <td class="center-text"  align="left" style="font-family:'Roboto Slab',Arial,Helvetica,sans-serif;font-size:20px;line-height:26px;font-weight:400;font-style:normal;color:#343e9e;text-decoration:none;letter-spacing:0px;">
                                                             <div align="left" style="font-family:'Poppins',Arial,Helvetica,sans-serif;font-size:14px;line-height:26px;font-weight:400;font-style:italic;color:#343e9e;text-decoration:none;letter-spacing:0px;">
-                                                                Price: {{$cart->product_price}}
+                                                                Price: {{$cart['product_price']}}0 VND
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -240,7 +240,7 @@
                                                     <tr  >
                                                         <td class="center-text"  align="left" style="font-family:'Roboto Slab',Arial,Helvetica,sans-serif;font-size:20px;line-height:26px;font-weight:400;font-style:normal;color:#343e9e;text-decoration:none;letter-spacing:0px;">
                                                             <div align="left" style="font-family:'Poppins',Arial,Helvetica,sans-serif;font-size:14px;line-height:26px;font-weight:400;font-style:italic;color:#343e9e;text-decoration:none;letter-spacing:0px;">
-                                                                Quantity: {{$cart->cart_quantity}}
+                                                                Quantity: {{$cart['cart_quantity']}}
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -259,7 +259,7 @@
                                                     <tr  >
                                                         <td class="center-text"  align="left" style="font-family:'Roboto Slab',Arial,Helvetica,sans-serif;font-size:20px;line-height:26px;font-weight:400;font-style:normal;color:#343e9e;text-decoration:none;letter-spacing:0px;">
                                                             <div align="left" style="font-family:'Poppins',Arial,Helvetica,sans-serif;font-size:14px;line-height:26px;font-weight:400;font-style:italic;color:#343e9e;text-decoration:none;letter-spacing:0px;">
-                                                                Amount: {{$cart->cart_amount}}
+                                                                Amount: {{$cart['cart_amount']}}0 VND
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -288,7 +288,7 @@
                             </tr>
 
                             @php
-                                $payment += $cart->cart_amount;
+                                $payment += $cart['cart_amount'];
                             @endphp
 
                             @endforeach
@@ -317,7 +317,7 @@
                                                     <tr  >
                                                         <td class="center-text"  align="left" style="font-family:'Roboto Slab',Arial,Helvetica,sans-serif;font-size:20px;line-height:26px;font-weight:400;font-style:normal;color:#343e9e;text-decoration:none;letter-spacing:0px;">
                                                             <div align="left" style="font-family:'Poppins',Arial,Helvetica,sans-serif;font-size:14px;line-height:26px;font-weight:400;font-style:italic;color:#343e9e;text-decoration:none;letter-spacing:0px;">
-                                                                Name: {{$cart->user_name}}
+                                                                Name: {{$cart['user_name']}}
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -340,7 +340,7 @@
                                                     <tr  >
                                                         <td class="center-text"  align="left" style="font-family:'Roboto Slab',Arial,Helvetica,sans-serif;font-size:20px;line-height:26px;font-weight:400;font-style:normal;color:#343e9e;text-decoration:none;letter-spacing:0px;">
                                                             <div align="left" style="font-family:'Poppins',Arial,Helvetica,sans-serif;font-size:14px;line-height:26px;font-weight:400;font-style:italic;color:#343e9e;text-decoration:none;letter-spacing:0px;">
-                                                                Email: {{$cart->user_email}}
+                                                                Email: {{$cart['user_email']}}
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -359,7 +359,7 @@
                                                     <tr  >
                                                         <td class="center-text"  align="left" style="font-family:'Roboto Slab',Arial,Helvetica,sans-serif;font-size:20px;line-height:26px;font-weight:400;font-style:normal;color:#343e9e;text-decoration:none;letter-spacing:0px;">
                                                             <div align="left" style="font-family:'Poppins',Arial,Helvetica,sans-serif;font-size:14px;line-height:26px;font-weight:400;font-style:italic;color:#343e9e;text-decoration:none;letter-spacing:0px;">
-                                                                Phone: {{$cart->user_phone}}
+                                                                Phone: {{$cart['user_phone']}}
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -378,7 +378,26 @@
                                                     <tr  >
                                                         <td class="center-text"  align="left" style="font-family:'Roboto Slab',Arial,Helvetica,sans-serif;font-size:20px;line-height:26px;font-weight:400;font-style:normal;color:#343e9e;text-decoration:none;letter-spacing:0px;">
                                                             <div align="left" style="font-family:'Poppins',Arial,Helvetica,sans-serif;font-size:14px;line-height:26px;font-weight:400;font-style:italic;color:#343e9e;text-decoration:none;letter-spacing:0px;">
-                                                                Address: {{$cart->user_address}}
+                                                                Address: {{$cart['user_address']}}
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr  >
+                                                        <td height="10" style="font-size:10px;line-height:10px;">&nbsp;</td>
+                                                    </tr>
+                                                    <tr  >
+                                                        <td class="center-text"  align="left" style="font-family:'Poppins',Arial,Helvetica,sans-serif;font-size:16px;line-height:24px;font-weight:400;font-style:normal;color:#282828;text-decoration:none;letter-spacing:0px;">
+                                                            <div  >
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+
+                                                <table border="0" align="left" cellpadding="0" cellspacing="0" role="presentation" class="row" width="225" style="width:225px;max-width:225px;">
+                                                    <tr  >
+                                                        <td class="center-text"  align="left" style="font-family:'Roboto Slab',Arial,Helvetica,sans-serif;font-size:20px;line-height:26px;font-weight:400;font-style:normal;color:#343e9e;text-decoration:none;letter-spacing:0px;">
+                                                            <div align="left" style="font-family:'Poppins',Arial,Helvetica,sans-serif;font-size:14px;line-height:26px;font-weight:400;font-style:italic;color:#343e9e;text-decoration:none;letter-spacing:0px;">
+                                                                Note: {{$cart['cart_note']}}
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -397,7 +416,7 @@
                                                     <tr  >
                                                         <td class="center-text"  align="left" style="font-family:'Roboto Slab',Arial,Helvetica,sans-serif;font-size:20px;line-height:26px;font-weight:400;font-style:normal;color:#2d2e31;text-decoration:none;letter-spacing:0px;">
                                                             <div align="left" style="font-family:'Poppins',Arial,Helvetica,sans-serif;font-size:14px;line-height:26px;font-weight:400;font-style:italic;color:#343e9e;text-decoration:none;letter-spacing:0px;">
-                                                                Total payment: {{$payment}}
+                                                                Total payment: {{$payment}}.000 VND
                                                             </div>
                                                         </td>
                                                     </tr>
