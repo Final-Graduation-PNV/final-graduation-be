@@ -259,7 +259,7 @@
                                                     <tr  >
                                                         <td class="center-text"  align="left" style="font-family:'Roboto Slab',Arial,Helvetica,sans-serif;font-size:20px;line-height:26px;font-weight:400;font-style:normal;color:#343e9e;text-decoration:none;letter-spacing:0px;">
                                                             <div align="left" style="font-family:'Poppins',Arial,Helvetica,sans-serif;font-size:14px;line-height:26px;font-weight:400;font-style:italic;color:#343e9e;text-decoration:none;letter-spacing:0px;">
-                                                                Amount: {{$cart->cart_amount}}
+                                                                Amount: {{$cart['cart_amount']}}
                                                             </div>
                                                         </td>
                                                     </tr>
