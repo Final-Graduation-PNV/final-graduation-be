@@ -16,17 +16,6 @@ use InvalidArgumentException;
 
 class UserController extends Controller
 {
-    public function getNearbyProducts($latitude, $longitude)
-    {
-        $radius = 6371; // Earth's radius in km
-        $maxDistance = 100; // Maximum distance to search in km
-        $products = Product::selectRaw('*, (' . $radius . ' * acos(cos(radians(' . $latitude . ')) * cos(radians(latitude)) * cos(radians(longitude) - radians(' . $longitude . ')) + sin(radians(' . $latitude . ')) * sin(radians(latitude)))) AS distance')
-            ->having('distance', '<', $maxDistance)
-            ->orderBy('distance')
-            ->get();
-        return response()->json($products);
-    }
-    
     public function profile(Request $request)
     {
         try {
