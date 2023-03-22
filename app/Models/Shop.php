@@ -24,6 +24,7 @@ class Shop extends Model
         'gender',
         'address',
         'city',
+        'user_id',
         'longitude',
         'latitude',
     ];
