@@ -3,12 +3,16 @@
 namespace App\Http\Controllers\API\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\RoleUser;
+use App\Models\Shop;
 use App\Models\User;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use InvalidArgumentException;
 
 class UserController extends Controller
 {
@@ -55,46 +59,57 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * Make the current user a shop owner.
+     *
+     * @param Request $request The HTTP request.
+     *
+     * @return JsonResponse The HTTP response.
+     *
+     * @throws InvalidArgumentException If the request data is invalid.
+     * @throws Exception If an error occurs while saving the user data or assigning the role.
+     */
     public function beShopOwner(Request $request)
     {
         $id = $request->user()->id;
 
+        // Validate the request data.
         $data = $request->validate([
-            'phone' => 'required',
-            'birth' => 'required',
+            'name' => 'required|unique:shops,name',
+            'phone' => 'required|string|min:10',
+            'birth' => 'required|date_format:Y-m-d|before_or_equal:today',
             'gender' => 'required',
             'address' => 'required',
             'city' => 'required'
         ]);
 
-        $user = User::find($id);
-        if (!$user) {
-            return response()->json([
-                'message' => "User does not exist!"
-            ], 400);
-        }
+        // Create the shop data.
+        $shop = Shop::create(array_merge(
+            [
+                'name' => $data['name'],
+                'phone' => $data['phone'],
+                'birth' => $data['birth'],
+                'gender' => $data['gender'],
+                'address' => $data['address'],
+                'city' => $data['city'],
+                'longitude' => $request->longitude,
+                'latitude' => $request->latitude,
+                'user_id' => $id,
+                'end_time' => Carbon::now()->addMonths(2)->format('Y-m-d')
+            ]
+        ));
 
-        $user->end_time = Carbon::now()->addMonths(2)->format('Y-m-d');
-        $user->phone = $data['phone'];
-        $user->birth = $data['birth'];
-        $user->gender = $data['gender'];
-        $user->address = $data['address'];
-        $user->city = $data['city'];
-        $user->longitude = $request->longitude;
-        $user->latitude = $request->latitude;
-        $user->save();
-
-        $role_user = DB::table('role_user')
-            ->where('user_id', $id)
+        // Check if the user already has the shop owner role.
+        $hasShopOwnerRole = DB::table('role_user')
+            ->where('user_id', $request->user()->id)
             ->where('role_id', 2)
-            ->first();
+            ->exists();
 
-        if ($role_user) {
-            return response()->json([
-                'message' => "You have already been a shop owner!"
-            ], 409);
+        if ($hasShopOwnerRole) {
+            throw new InvalidArgumentException('You have already been a shop owner!');
         }
 
+        // Assign the shop owner role to the user.
         DB::table('role_user')->insert(
             array(
                 'user_id' => $id,
@@ -102,10 +117,11 @@ class UserController extends Controller
             )
         );
 
+        // Return a JSON response with the success message.
         return response()->json([
-            'message' => "You are a shop owner now!",
-            'user_id' => $id,
-            'expires' => $user->end_time
+            'message' => 'You are a shop owner now!',
+            'shop_id' => $shop->id,
+            'expires' => $shop->end_time
         ], 201);
     }
 }
