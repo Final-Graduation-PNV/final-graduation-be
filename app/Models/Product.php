@@ -33,6 +33,6 @@ class Product extends Model
 
     public function cart()
     {
-        return $this->belongsTo(Cart::class,'product_id','id');
+        return $this->hasMany(Cart::class);
     }
 }

@@ -13,14 +13,14 @@ class UserBill extends Mailable
 {
     use Queueable, SerializesModels;
 
-    private $data;
+    private $payment;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($data)
+    public function __construct($payment)
     {
-        return $this->data = $data;
+        return $this->payment = $payment;
     }
 
     /**
@@ -40,7 +40,7 @@ class UserBill extends Mailable
     {
         return new Content(
             view: 'email.bill',
-            with: ['data'=> $this->data],
+            with: ['data'=> $this->payment]
         );
     }
 

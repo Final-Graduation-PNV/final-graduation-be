@@ -61,53 +61,61 @@ class PaymentController extends Controller
         }
     }
 
+    private function updateCart(Cart $cart, array $data, User $user)
+    {
+        $cart->note = $data['note'] ?? 'Please deliver on time!';
+        $cart->name = $data['name'] ?? $user->name;
+        $cart->phone = $data['phone'] ?? $user->phone;
+        $cart->city = $data['city'] ?? $user->city;
+        $cart->address = $data['address'] ?? $user->address;
+        $cart->status = true;
+        $cart->update();
+    }
+
+    private function getPaymentDetails(Request $request)
+    {
+        $cartData = Cart::with(['product', 'user'])
+            ->where('user_id', $request->user()->id)
+            ->whereIn('id', $request->ids)
+            ->get();
+
+        $outPut = [];
+        foreach ($cartData as $cart) {
+            $outPut[] = [
+                'cart_id' => $cart->id,
+                'user_name' => $cart->name,
+                'user_email' => $cart->user->email,
+                'user_phone' => $cart->phone,
+                'user_address' => $cart->address,
+                'user_city' => $cart->city,
+                'cart_quantity' => $cart->quantity,
+                'cart_amount' => $cart->amount,
+                'cart_note' => $cart->note,
+                'product_name' => $cart->product->name,
+                'product_price' => $cart->product->price,
+            ];
+        }
+        return $outPut;
+    }
+
     public function payment(Request $request)
     {
         $data = $request->only(['ids', 'note', 'name', 'phone', 'city', 'address']);
 
-        $carts = Cart::find($data['ids']);
+        $carts = Cart::with('product')
+            ->find($data['ids']);
 
-        $user = User::where('id', $request->user()->id)->get();
+        $user = $request->user();
 
         foreach ($carts as $cart) {
-            if (!is_null($data['note'] or $data['name'] or $data['phone'] or $data['city'] or $data['address'])) {
-                $cart->note = "Please deliver on time!";
-                $cart->name = $user[0]['name'];
-                $cart->phone = $user[0]['phone'];
-                $cart->city = $user[0]['city'];
-                $cart->address = $user[0]['address'];
-            } else {
-                $cart->note = $data['note'];
-                $cart->name = $data['name'];
-                $cart->phone = $data['phone'];
-                $cart->city = $data['city'];
-                $cart->address = $data['address'];
-            }
-            $cart->status = true;
-            $cart->save();
+            $this->updateCart($cart, $data, $user);
         }
-        $payment = Cart::join('products', 'products.id', '=', 'carts.product_id')
-            ->join('users', 'users.id', '=', 'carts.user_id')
-            ->where('carts.user_id', $request->user()->id)
-            ->whereIn('carts.id', $request->ids)
-            ->get(['carts.name as user_name',
-                'users.email as user_email',
-                'carts.phone as user_phone',
-                'carts.address as user_address',
-                'carts.city as user_city',
-                'carts.id as cart_id',
-                'carts.quantity as cart_quantity',
-                'carts.amount as cart_amount',
-                'carts.status as cart_status',
-                'carts.note as cart_note',
-                'products.id as product_id',
-                'products.name as product_name',
-                'products.image as product_image',
-                'products.price as product_price'
-            ]);
-        Mail::to($user[0]['email'])->send(new UserBill($payment));
+
+        $payment = $this->getPaymentDetails($request);
+        Mail::to($user->email)->send(new UserBill($payment));
+
         return response()->json([
-            'message' => 'Check your email( '. $user[0]['email'].') to see bill detail.'
-        ], 201);
+            'message' => 'Check your email( ' . $user->email . ') to see bill detail.'
+        ], 200);
     }
 }
