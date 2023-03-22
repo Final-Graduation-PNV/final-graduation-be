@@ -4,7 +4,9 @@ namespace App\Http\Controllers\API\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\Shop;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class GetProductController extends Controller
 {
@@ -68,5 +70,25 @@ class GetProductController extends Controller
             'products' => $products,
             'message' => 'Search results'
         ], 202);
+    }
+
+    public function getShopNearUser(Request $request)
+    {
+        $latitude = $request->latitude;
+        $longitude = $request->longitude;
+
+        $shops = Shop::select("shops.name", "shops.avatar"
+            , DB::raw("6371 * acos(cos(radians(" . $latitude . "))
+                    * cos(radians(users.lat))
+                    * cos(radians(users.lon) - radians(" . $longitude . "))
+                    + sin(radians(" . $latitude . "))
+                    * sin(radians(users.lat))) AS distance")
+        )
+            ->orderBy('distance', 'asc')
+            ->paginate(16);
+
+        return response()->json([
+            'shops' => $shops
+        ], 200);
     }
 }
