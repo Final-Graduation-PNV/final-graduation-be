@@ -19,7 +19,7 @@ class ShopOwnerSeeder extends Seeder
     {
         $user = User::create([
             'name' => 'shop',
-            'email' => 'shop@gmail.com',
+            'email' => 'athanh2002kt@gmail.com',
             'password' => Hash::make('@DThanh1508'),
             'email_verified' => true,
             'city' => 'Kon Tum',

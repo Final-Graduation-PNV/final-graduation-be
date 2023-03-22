@@ -4,8 +4,10 @@ namespace App\Http\Controllers\API\Authentication;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
+use App\Mail\ForgotPassword;
 use App\Mail\UserVerification;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -97,7 +99,7 @@ class AuthController extends Controller
                 'email' => $validation['email'],
                 'password' => bcrypt($validation['password']),
                 'confirmation_code' => rand(100000, 999999),
-                'confirmation_code_expired_in' => Carbon::now()->addMinutes(2)
+                'confirmation_code_expired_in' => Carbon::now()->addMinutes(5)
             ]
         ));
 
@@ -441,29 +443,102 @@ class AuthController extends Controller
         return response($res, 200);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/logout",
-     *     summary="Logout the current user",
-     *     description="Revokes all access tokens associated with the current user",
-     *     tags={"Authentication"},
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Response(
-     *         response="200",
-     *         description="Successful operation",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="User logged out")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response="401",
-     *         description="Unauthorized",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Unauthenticated")
-     *         )
-     *     )
-     * )
-     */
+    public function forgotPassword(Request $request)
+    {
+        try {
+            $data = $request->validate([
+                'email' => 'required|string'
+            ]);
+
+            $user = User::where('email', $data['email'])->first();
+
+            if (!$user) {
+                return response([
+                    'message' => 'Incorrect email!'
+                ], 400);
+            }
+
+            $user->confirmation_code = rand(100000, 999999);
+            $user->confirmation_code_expired_in = Carbon::now()->addMinutes(5);
+            $user->save();
+            Mail::to($user->email)->send(new ForgotPassword($user));
+
+            return response()->json([
+                'message' => 'OTP has been sent to your email!',
+                'id' => $user->id
+            ], 200);
+
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'An error occurred while processing your request. Please try again later.'
+            ], 500);
+        }
+    }
+
+    public function verifyOTP(Request $request, $id)
+    {
+        try {
+            $data = $request->validate([
+                'otp' => 'required|integer|min:100000'
+            ]);
+
+            $user = User::findOrFail($id);
+
+            if (!$user) {
+                return response()->json(["message" => "User does not exist"], 400);
+            } elseif (Carbon::now()->gt($user->confirmation_code_expired_in)) {
+                return response()->json(["message" => "Your OTP expired"], 400);
+            } else {
+                if ($data['otp'] != $user->confirmation_code) {
+                    return response()->json(["message" => "Your OTP is invalid"], 400);
+                }
+                $user->confirmation_code = null;
+                $user->confirmation_code_expired_in = null;
+                $user->save();
+
+                return response()->json([
+                    'message' => 'OTP verified successfully!',
+                ], 200);
+            }
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'An error occurred while processing your request. Please try again later.'
+            ], 500);
+        }
+    }
+
+    public function changePassword(Request $request, $id)
+    {
+        $request->validate([
+            'password' => [
+                'required',
+                'string',
+                'min:8',              // must be at least 8 characters in length
+                'regex:/[a-z]/',      // must contain at least one lowercase letter
+                'regex:/[A-Z]/',      // must contain at least one uppercase letter
+                'regex:/[0-9]/',      // must contain at least one digit
+                'regex:/[@$!%*#?&]/', // must contain a special character
+            ]
+        ]);
+
+        try {
+            $user = User::find($id);
+
+            if (!$user) {
+                return response()->json(['error' => 'User not found'], 404);
+            }
+
+            $user->password = bcrypt($request['password']);
+            $user->save();
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'An error occurred while processing your request. Please try again later.'
+            ], 500);
+        }
+
+        return response()->json(['message' => 'Password updated successfully'], 200);
+    }
+
     public function logout(Request $request)
     {
         auth()->user()->tokens()->delete();
