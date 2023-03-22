@@ -21,7 +21,7 @@ class UserController extends Controller
         try {
             $id = $request->user()->id;
 
-            $user = User::where('id', $id)->first(['id', 'name', 'email', 'avatar', 'phone', 'birth', 'address', 'city', 'renewal']);
+            $user = User::where('id', $id)->first(['id', 'name', 'email', 'avatar', 'phone', 'birth', 'gender', 'address', 'city', 'renewal']);
 
             return response()->json([
                 'user' => $user
