@@ -80,7 +80,7 @@ class ShopOwnerSeeder extends Seeder
 
         $user2 = User::create([
             'name' => 'shop2',
-            'email' => 'shop2@gmail.com',
+            'email' => 'duyet.ho23@student.passerellesnumeriques.org',
             'password' => Hash::make('@DThanh1508'),
             'email_verified' => true,
             'city' => 'Kon Tum',
