@@ -64,7 +64,7 @@ class ShopOwnerSeeder extends Seeder
             'address' => 'Dak Pung - Dak Ro Nga - Dak To - Kon Tum',
             'city' => 'Kon Tum',
             'renewal' => false,
-            'user_id' => $user->id,
+            'user_id' => $user1->id,
             'end_time' => Carbon::now()
         ]);
 
@@ -79,7 +79,7 @@ class ShopOwnerSeeder extends Seeder
         ]);
 
         $user2 = User::create([
-            'name' => 'shop1',
+            'name' => 'shop2',
             'email' => 'shop2@gmail.com',
             'password' => Hash::make('@DThanh1508'),
             'email_verified' => true,
@@ -101,7 +101,7 @@ class ShopOwnerSeeder extends Seeder
 
         DB::table('role_user')->insert([
             'role_id' => 3,
-            'user_id' => $user1->id
+            'user_id' => $user2->id
         ]);
 
         DB::table('role_user')->insert([
