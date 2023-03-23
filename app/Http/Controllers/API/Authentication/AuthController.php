@@ -458,9 +458,13 @@ class AuthController extends Controller
                 ], 400);
             }
 
-            $user->confirmation_code = rand(100000, 999999);
-            $user->confirmation_code_expired_in = Carbon::now()->addMinutes(5);
+            $user->fill([
+                'confirmation_code' => rand(100000, 999999),
+                'confirmation_code_expired_in' => Carbon::now()->addMinutes(5),
+            ]);
+
             $user->save();
+
             Mail::to($user->email)->send(new ForgotPassword($user));
 
             return response()->json([
