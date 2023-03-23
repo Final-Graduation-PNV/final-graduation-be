@@ -117,7 +117,6 @@ class ShopOwnerController extends Controller
         $id = $request->user()->id;
 
         $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-        $vnp_Returnurl = "https://decoplantsflowers-f381a.web.app/";
         $vnp_TmnCode = "VPUPIB82";// Terminal ID
         $vnp_HashSecret = "WTLWKPUMSRUSENTTMVAJQNJDELXFQJOR"; // Secret Key
 
@@ -140,7 +139,7 @@ class ShopOwnerController extends Controller
             "vnp_Locale" => $vnp_Locale,
             "vnp_OrderInfo" => $vnp_OrderInfo,
             "vnp_OrderType" => $vnp_OrderType,
-            "vnp_ReturnUrl" => $vnp_Returnurl,
+            "vnp_ReturnUrl" => route('return'),
             "vnp_TxnRef" => $vnp_TxnRef
         );
 

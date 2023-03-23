@@ -125,6 +125,7 @@ class AllRoleController extends Controller
         ksort($inputData);
         $i = 0;
         $hashData = "";
+
         foreach ($inputData as $key => $value) {
             if ($i == 1) {
                 $hashData = $hashData . '&' . urlencode($key) . "=" . urlencode($value);
@@ -135,12 +136,13 @@ class AllRoleController extends Controller
         }
 
         $secureHash = hash_hmac('sha512', $hashData, $vnp_HashSecret);
+        $orderId = $inputData['vnp_TxnRef']; // form orderId-userId
+        $userId = explode("-", $orderId)[1];
+        $shop = Shop::where('user_id', $userId);
         if ($secureHash == $vnp_SecureHash) {
             if ($_GET['vnp_ResponseCode'] == '00') {
-                return response()->json([
-                    'message' => "Account renewal successful!",
-                    'data' => $secureHash
-                ], 200);
+                $shop->renewal = true;
+                return view('vnpay.return');
             } else {
                 return response()->json([
                     'message' => "Account renewal failed!",
