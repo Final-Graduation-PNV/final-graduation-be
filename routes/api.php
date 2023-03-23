@@ -38,7 +38,7 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/users/resend-otp','resendOTP');
     Route::post('/users/{id}','cancel');
     Route::patch('/users/forgot','forgotPassword');
-    Route::get('/users/{id}/forgot','verifyOTP');
+    Route::post('/users/{id}/forgot','verifyOTP');
     Route::post('/users/{id}/password','changePassword');
     Route::post('/login','login');
 });
