@@ -22,10 +22,10 @@ class HandleShopOwnerController extends Controller
 
         foreach ($shops as $shop) {
             if ($shop && $shop->end_time) {
-                $date = Carbon::createFromFormat('Y-m-d H:i:s', $shop->end_time)->format('Y-m-d');
-                $expires = Carbon::now()->format('Y-m-d');
+                $expires = $shop->end_time;
+                $date = Carbon::now()->format('Y-m-d');
 
-                if (!($date === $expires)) {
+                if (!($date > $expires)) {
                     $validArray[] = [
                         'shop_id' => $shop->id,
                         'name' => $shop->name,
