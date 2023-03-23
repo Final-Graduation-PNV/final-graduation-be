@@ -47,5 +47,36 @@ class ShopOwnerSeeder extends Seeder
             'role_id' => 2,
             'user_id' => $user->id
         ]);
+
+        $user1 = User::create([
+            'name' => 'shop1',
+            'email' => 'admin@gmail.com',
+            'password' => Hash::make('@DThanh1508'),
+            'email_verified' => true,
+            'city' => 'Kon Tum',
+            'address' => 'Dak Pung - Dak Ro Nga - Dak To - Kon Tum',
+            'end_time' => Carbon::now()->addMonth(2)->format('Y-m-d')
+        ]);
+
+        $shop1 = Shop::create([
+            'name' => 'shop1',
+            'phone' => '982934861',
+            'birth' => '2002-08-15',
+            'gender' => 'male',
+            'address' => 'Dak Pung - Dak Ro Nga - Dak To - Kon Tum',
+            'city' => 'Kon Tum',
+            'user_id' => $user->id,
+            'end_time' => Carbon::now()->addMinutes(5)->format('Y-m-d')
+        ]);
+
+        DB::table('role_user')->insert([
+            'role_id' => 3,
+            'user_id' => $user1->id
+        ]);
+
+        DB::table('role_user')->insert([
+            'role_id' => 2,
+            'user_id' => $user1->id
+        ]);
     }
 }
