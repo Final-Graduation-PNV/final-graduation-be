@@ -47,6 +47,7 @@ class ShopOwnerSeeder extends Seeder
             'user_id' => $user->id
         ]);
 
+//        expressed
         $user1 = User::create([
             'name' => 'Ngô Tròn',
             'email' => 'tron.ngo23@student.passerellesnumeriques.org',
