@@ -7,6 +7,7 @@ use App\Mail\RenewalShopOwnerAccount;
 use App\Models\Category;
 use App\Models\Shop;
 use App\Models\User;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Mail;
 
@@ -142,6 +143,7 @@ class AllRoleController extends Controller
         if ($secureHash == $vnp_SecureHash) {
             if ($_GET['vnp_ResponseCode'] == '00') {
                 $shop->renewal = true;
+                $shop->end_time = Carbon::now()->addMonth(2);
                 $shop->save();
                 return view('vnpay.return');
             } else {
