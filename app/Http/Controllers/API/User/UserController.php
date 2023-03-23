@@ -72,7 +72,7 @@ class UserController extends Controller
         $id = $request->user()->id;
 
         // Validate the request data.
-        $data = $request->validate([
+        $this->validate($request, [
             'name' => 'required|unique:shops,name',
             'phone' => 'required|string|min:10',
             'birth' => 'required|date_format:Y-m-d|before_or_equal:today',
@@ -81,21 +81,20 @@ class UserController extends Controller
             'city' => 'required'
         ]);
 
+        $endTime = Carbon::now()->addMonth(2)->format('Y-m-d');
         // Create the shop data.
-        $shop = Shop::create(array_merge(
-            [
-                'name' => $data['name'],
-                'phone' => $data['phone'],
-                'birth' => $data['birth'],
-                'gender' => $data['gender'],
-                'address' => $data['address'],
-                'city' => $data['city'],
-                'longitude' => $request->longitude,
-                'latitude' => $request->latitude,
-                'user_id' => $id,
-                'end_time' => Carbon::now()->addMonths(2)->format('Y-m-d')
-            ]
-        ));
+        $shop = new Shop();
+        $shop->name = $request->name;
+        $shop->phone = $request->phone;
+        $shop->birth = $request->birth;
+        $shop->gender = $request->gender;
+        $shop->address = $request->address;
+        $shop->city = $request->city;
+        $shop->longitude = $request->longitude;
+        $shop->latitude = $request->longitude;
+        $shop->user_id = $id;
+        $shop->end_time = Carbon::now()->addMonth(2);
+        $shop->save();
 
         // Check if the user already has the shop owner role.
         $hasShopOwnerRole = DB::table('role_user')
@@ -118,7 +117,7 @@ class UserController extends Controller
         // Return a JSON response with the success message.
         return response()->json([
             'message' => 'You are a shop owner now!',
-            'shop_id' => $shop->id,
+            'shop_id' => $shop->user_id,
             'expires' => $shop->end_time
         ], 201);
     }
