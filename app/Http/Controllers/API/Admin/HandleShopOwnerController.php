@@ -3,11 +3,9 @@
 namespace App\Http\Controllers\API\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\Shop;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 use function Symfony\Component\Translation\t;
 
 class HandleShopOwnerController extends Controller
@@ -17,9 +15,7 @@ class HandleShopOwnerController extends Controller
      */
     public function notificationShopOwnerAccount()
     {
-        $shops = User::join('role_user', 'role_user.user_id', '=', 'users.id')
-            ->where('role_user.role_id', 2)
-            ->get(['users.*']);
+        $shops = Shop::all();
 
         $validArray = [];
         $expireArray = [];
