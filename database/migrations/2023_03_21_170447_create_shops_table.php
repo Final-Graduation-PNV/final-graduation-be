@@ -24,6 +24,7 @@ return new class extends Migration
             $table->integer('times_renewal')->default(0);
             $table->string('longitude')->nullable();
             $table->string('latitude')->nullable();
+            $table->date('end_time')->nullable();
             $table->unsignedInteger('user_id');
             $table->foreign('user_id')
                 ->references('id')
