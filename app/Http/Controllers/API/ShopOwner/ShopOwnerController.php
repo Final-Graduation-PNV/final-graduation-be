@@ -114,7 +114,11 @@ class ShopOwnerController extends Controller
 
     public function checkoutPayment(Request $request)
     {
-        $id = $request->user()->id;
+        $idUser = $request->user()->id;
+
+        $idShop = Shop::where('user_id', $idUser)->first();
+
+        $id = $idShop->user_id;
 
         $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
         $vnp_TmnCode = "VPUPIB82";// Terminal ID
