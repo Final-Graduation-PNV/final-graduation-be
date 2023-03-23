@@ -27,5 +27,6 @@ class Shop extends Model
         'user_id',
         'longitude',
         'latitude',
+        'end_end',
     ];
 }
