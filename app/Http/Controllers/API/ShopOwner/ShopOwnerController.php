@@ -17,15 +17,19 @@ class ShopOwnerController extends Controller
         try {
             $id = $request->user()->id;
 
-            $shop = User::join('role_user', 'role_user.user_id', '=', 'users.id')
-                ->where('role_user.user_id', $id)
-                ->first('users.*');
+            $shop = Shop::where('user_id', $id)->first();
 
-            if ($shop && $shop->end_time) {
-                $date = Carbon::createFromFormat('Y-m-d H:i:s', $shop->end_time)->format('Y-m-d');
-                $expires = Carbon::now()->format('Y-m-d');
+            if (!$shop->end_time) {
+                return response()->json([
+                    'message' => 'Your account has expired. You must pay to continue using!',
+                ],402);
+            }
 
-                if ($date === $expires) {
+            if ($shop) {
+                $expires = $shop->end_time;
+                $date = Carbon::now()->format('Y-m-d');
+
+                if ($date > $expires) {
                     $shop->renewal = false;
                     $shop->save();
                     $expireArray = [
@@ -47,7 +51,7 @@ class ShopOwnerController extends Controller
 
                     return response()->json([
                         'valid_account' => [$validArray]
-                    ], 200);
+                    ], 202);
                 }
             } else {
                 return response()->json([
@@ -61,7 +65,7 @@ class ShopOwnerController extends Controller
             // Return an error response to the client
             return response()->json([
                 'message' => 'An error occurred while processing your request.',
-            ], 500);
+            ], 400);
         }
     }
 
@@ -73,7 +77,7 @@ class ShopOwnerController extends Controller
 
             return response()->json([
                 'shop' => $shop
-            ], 200);
+            ], 202);
         } catch (Exception $e) {
             return response()->json(['message' => 'An error occurred while fetching user data'], 500);
         }
