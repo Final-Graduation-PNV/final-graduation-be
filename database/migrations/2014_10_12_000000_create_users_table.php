@@ -28,9 +28,6 @@ class CreateUsersTable extends Migration
             $table->enum('gender', ['male', 'female', 'other'])->default('other');
             $table->string('address')->nullable();
             $table->string('city')->nullable();
-            $table->boolean('renewal')->default(true);
-            $table->string('longitude')->nullable();
-            $table->string('latitude')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
