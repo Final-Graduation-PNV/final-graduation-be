@@ -91,7 +91,7 @@ class UserController extends Controller
         $shop->address = $request->address;
         $shop->city = $request->city;
         $shop->longitude = $request->longitude;
-        $shop->latitude = $request->longitude;
+        $shop->latitude = $request->latitude;
         $shop->user_id = $id;
         $shop->end_time = Carbon::now()->addMonth(2);
         $shop->save();
