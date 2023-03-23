@@ -138,10 +138,11 @@ class AllRoleController extends Controller
         $secureHash = hash_hmac('sha512', $hashData, $vnp_HashSecret);
         $orderId = $inputData['vnp_TxnRef']; // form orderId-userId
         $userId = explode("-", $orderId)[1];
-        $shop = Shop::where('user_id', $userId);
+        $shop = Shop::where('user_id', $userId)->first();
         if ($secureHash == $vnp_SecureHash) {
             if ($_GET['vnp_ResponseCode'] == '00') {
                 $shop->renewal = true;
+                $shop->save();
                 return view('vnpay.return');
             } else {
                 return response()->json([
