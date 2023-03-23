@@ -600,7 +600,7 @@
                                                         </td>
                                                         <td width="10" style="width: 10px;"></td>
                                                         <td align="center">
-                                                            <a href="https://play.google.com/"><img style="display:block;width:100%;max-width:117px;border:0px;"    width="117" src=".https://i.postimg.cc/rsz27CZK/Google-play.png" border="0"  alt="icon"></a>
+                                                            <a href="https://play.google.com/"><img style="display:block;width:100%;max-width:117px;border:0px;"    width="117" src="https://i.postimg.cc/rsz27CZK/Google-play.png" border="0"  alt="icon"></a>
                                                         </td>
                                                     </tr>
                                                 </table>
